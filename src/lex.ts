@@ -1,5 +1,6 @@
 
 export enum TokenKind {
+    NextLine,
     Open,
     Close,
     Symbol,
@@ -10,6 +11,7 @@ export enum TokenKind {
 };
 
 export type Token =
+    | { type: TokenKind.NextLine }
     | { type: TokenKind.Open }
     | { type: TokenKind.Close }
     | { type: TokenKind.Symbol, name: string }
@@ -21,18 +23,23 @@ export type Token =
 export class LexError {
     reason: string;
 
-    constructor(reason: string){
+    constructor(reason: string) {
         this.reason = reason;
+    }
+
+    toString() {
+        return this.reason;
     }
 }
 
 export function lex(content: string): Token[] | LexError {
-    let words = splitAndKeep(content, [' ', '(', ')']).filter((x) => x !== '');
-    let tokens: Token[] = [];
+    let words = splitAndKeep(content, [' ', '(', ')', '\n']).filter((x) => !x.match(/^[ \t]*$/));
 
     try {
-        tokens = words.map((word) => {
+        return words.map((word) => {
             switch (word) {
+                case '\n':
+                    return { type: TokenKind.NextLine };
                 case '(':
                     return { type: TokenKind.Open };
                 case ')':
@@ -53,15 +60,13 @@ export function lex(content: string): Token[] | LexError {
 
             throw new LexError("Invalid character in content");
         });
-    } catch(e){
-        if(e instanceof LexError){
+    } catch (e) {
+        if (e instanceof LexError) {
             return e;
         } else {
             throw e;
         }
     }
-
-    return tokens;
 }
 
 // Implementation based off publicly available implementation 'https://stackoverflow.com/a/57329458'
