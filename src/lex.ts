@@ -1,4 +1,6 @@
 
+import { CustomError } from 'ts-custom-error';
+
 export enum TokenKind {
     NextLine,
     Open,
@@ -20,15 +22,9 @@ export type Token =
     | { type: TokenKind.Or }
     | { type: TokenKind.Implies }
 
-export class LexError {
-    reason: string;
-
+export class LexError extends CustomError {
     constructor(reason: string) {
-        this.reason = reason;
-    }
-
-    toString() {
-        return this.reason;
+        super(reason);
     }
 }
 

@@ -1,6 +1,7 @@
 
 import unimplemented from 'ts-unimplemented';
+import { Ast } from './ast';
 
-export function okayProve(contents: string, outputFormat?: string): string {
+export function okayProve(ast: Ast): string {
     return unimplemented();
 }
