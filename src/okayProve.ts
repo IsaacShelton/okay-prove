@@ -1,26 +1,30 @@
 
+import unimplemented from 'ts-unimplemented';
 import { areExprsIdentical, Ast, AstExpr } from './ast';
 import { breakDown } from './breakDown';
 import { byPremise } from './justification';
+import { simplifyConclusion } from './simplifyConclusion';
 
 export class Structure {
     facts: AstExpr[];
-    constraints: AstExpr[];
+    conclusion: AstExpr;
 
     constructor(ast: Ast) {
         this.facts = ast.premises.map(byPremise);
-        this.constraints = [ast.conclusion];
+        this.conclusion = simplifyConclusion(ast.conclusion);
     }
 
     step(): Result {
         let oldFactsLength = this.facts.length;
-        let oldConstraintsLength = this.constraints.length;
-
-        // Work backward by breaking down constraints
-        this.constraints = breakDown(this.constraints);
 
         // Work forward by breaking down known facts
         this.facts = breakDown(this.facts);
+
+        /*
+        
+        this.facts = deduce(this.facts);
+
+        */
 
         /*
         // Work forward by deducing from known facts
@@ -44,23 +48,17 @@ export class Structure {
         }
         */
 
-        if (this.areConstraintsSatisfied()) {
+        if (this.conclusionReached()) {
             return Result.Complete;
-        } else if (this.facts.length != oldFactsLength || this.constraints.length != oldConstraintsLength) {
+        } else if (this.facts.length != oldFactsLength) {
             return Result.Progress;
         } else {
             return Result.Stagnant;
         }
     }
 
-    areConstraintsSatisfied(): boolean {
-        for (let constraint of this.constraints) {
-            if (!this.hasFact(constraint)) {
-                return false;
-            }
-        }
-
-        return true;
+    conclusionReached(): boolean {
+        return unimplemented();
     }
 
     hasFact(expr: AstExpr): boolean {

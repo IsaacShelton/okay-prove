@@ -56,7 +56,7 @@ export function byConjunction(expr: AstExpr, reference1: AstExpr, reference2: As
 
 export function byElimination(expr: AstExpr, reference: AstExpr): AstExpr {
     if (reference.type == AstExprKind.Or && reference.flavor == Flavor.Implies) {
-        // Be specific about specialization when applicable
+        // Be specific about what kind of elimination when applicable
         if (areExprsIdentical(reference.b, expr)) {
             return justify(expr, Reasoning.ModusPonens, reference);
         } else if (areExprsIdentical(reference.a, expr)) {

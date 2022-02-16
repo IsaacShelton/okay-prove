@@ -9,7 +9,7 @@ export function breakDown(exprs: AstExpr[]): AstExpr[] {
     );
 }
 
-function breakApart(expr: AstExpr): AstExpr[] {
+export function breakApart(expr: AstExpr): AstExpr[] {
     switch (expr.type) {
         case AstExprKind.And:
             return [

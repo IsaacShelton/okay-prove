@@ -16,7 +16,7 @@ export enum AstExprKind {
 // Used to indicate preference when facing user,
 // Operations applied to the holding expression will use reasoning
 // names based on flavor
-// e.g. Flavor.Implies for `or(not("a"), "b")` will using implies-related
+// e.g. Flavor.Implies for `or(not("a"), "b")` will use implies-related
 // naming of reasoning for eliminations and more
 export enum Flavor {
     Naked,
@@ -40,7 +40,7 @@ export class Ast {
     constructor(public premises: AstExpr[], public conclusion: AstExpr) { }
 }
 
-// NOTE: Does not consider justifications when determining
+// NOTE: Does not consider justifications or flavors when determining
 // whether two expressions are identical
 export function areExprsIdentical(a: AstExpr, b: AstExpr): boolean {
     if (a.type !== b.type) return false;
@@ -90,12 +90,14 @@ export function isExprIncluded(array: AstExpr[], isolated: AstExpr): boolean {
     return false;
 }
 
-export function mergeExprLists(list1: AstExpr[], list2: AstExpr[]): AstExpr[] {
-    let newList = [...list1];
+export function mergeExprLists(firstList: AstExpr[], ...lists: AstExpr[][]): AstExpr[] {
+    let newList = [...firstList];
 
-    for (let expr of list2) {
-        if (!isExprIncluded(list1, expr)) {
-            newList.push(expr);
+    for (let list of lists) {
+        for (let expr of list) {
+            if (!isExprIncluded(newList, expr)) {
+                newList.push(expr);
+            }
         }
     }
 
