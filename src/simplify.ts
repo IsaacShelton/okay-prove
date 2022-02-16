@@ -1,7 +1,9 @@
 
 import unimplemented from 'ts-unimplemented';
 import { CustomError } from 'ts-custom-error';
-import { AstExpr, AstExprKind, areExprsIdentical } from './ast';
+import { AstExpr, AstExprKind, areExprsIdentical, Flavor } from './ast';
+import { reducedImplies } from './astExprMaker';
+import { byDefinitionOfImplies } from './justification';
 
 export class SimplificationError extends CustomError {
     constructor(reason: string) {
@@ -29,6 +31,8 @@ export function negationNormalForm(expr: AstExpr): AstExpr {
     return unimplemented();
 }
 
+// NOTE: Existing justifications in the provided expression
+// are not in the resulting expression
 export function removeImplies(expr: AstExpr): AstExpr {
     switch (expr.type) {
         case AstExprKind.Symbol:
@@ -37,16 +41,15 @@ export function removeImplies(expr: AstExpr): AstExpr {
             return removeImplies(expr.child);
         case AstExprKind.And:
         case AstExprKind.Or:
-            return { type: expr.type, a: removeImplies(expr.a), b: removeImplies(expr.b) };
+            return { type: expr.type, a: removeImplies(expr.a), b: removeImplies(expr.b), flavor: expr.flavor };
         case AstExprKind.All:
         case AstExprKind.Any:
             return { type: expr.type, children: expr.children.map((child) => removeImplies(child)) };
         case AstExprKind.Implies:
-            return {
-                type: AstExprKind.Or,
-                a: { type: AstExprKind.Not, child: expr.a },
-                b: expr.b
-            };
+            return byDefinitionOfImplies(
+                reducedImplies(removeImplies(expr.a), removeImplies(expr.b)),
+                expr
+            );
     }
 
     throw new SimplificationError("removeImplies() got unrecognized AstExprKind");

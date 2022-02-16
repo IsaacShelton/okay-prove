@@ -13,7 +13,7 @@
     "local": "npm run build && npm i -g && okay-prove",
     "install": "npm run build && npm i -g",
     "refresh": "rm -rf ./node_modules ./package-lock.json && npm install",
-    "test": "jest"
+    "test": "npm run build && jest"
   },
   "dependencies": {
     "commander": "^9.0.0",

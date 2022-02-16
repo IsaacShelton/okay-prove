@@ -4,6 +4,8 @@ import fs from 'fs';
 import { Command } from 'commander';
 import { exit } from 'process';
 import { okayProve } from './okayProve';
+import { lex, LexError } from './lex';
+import { parse, ParseError } from './parse';
 
 let program = new Command();
 
@@ -22,6 +24,20 @@ program
             exit(1);
         }
 
-        okayProve(contents);
+        let tokens = lex(contents);
+
+        if (tokens instanceof LexError) {
+            console.error(tokens.name + ': ' + tokens.message);
+            exit(1);
+        }
+
+        let ast = parse(tokens);
+
+        if (ast instanceof ParseError) {
+            console.error(ast.name + ': ' + ast.message);
+            exit(1);
+        }
+
+        okayProve(ast);
     })
     .parse(process.argv);

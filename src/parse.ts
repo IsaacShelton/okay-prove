@@ -1,8 +1,7 @@
 
 import { CustomError } from 'ts-custom-error'
 import { Token, TokenKind } from './lex';
-import { Ast, AstExpr, AstExprKind } from './ast';
-import unimplemented from 'ts-unimplemented';
+import { Ast, AstExpr, AstExprKind, Flavor } from './ast';
 import { not, symbol } from './astExprMaker';
 
 export class ParseError extends CustomError {
@@ -129,7 +128,7 @@ export class Parser {
                 return rhs;
             }
 
-            return { type: getBinaryOperator(operatorToken.type), a: lhs, b: rhs };
+            return { type: getBinaryOperator(operatorToken.type), a: lhs, b: rhs, flavor: Flavor.Naked };
         } else {
             return this.error("Expected operator");
         }
