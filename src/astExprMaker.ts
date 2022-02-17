@@ -60,6 +60,14 @@ export function all(...args: (AstExpr | string)[]): AstExpr {
     return { type: AstExprKind.All, children: args.map(autoSymbol) };
 }
 
+export function tautology(): AstExpr {
+    return { type: AstExprKind.Tautology };
+}
+
+export function contradiction(): AstExpr {
+    return { type: AstExprKind.Contradiction };
+}
+
 function autoSymbol(expr: AstExpr | string): AstExpr {
     return typeof expr == "string" ? symbol(expr) : expr;
 }

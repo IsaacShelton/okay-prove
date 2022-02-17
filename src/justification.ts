@@ -38,6 +38,10 @@ export function byPremise(expr: AstExpr): AstExpr {
     return justify(expr, Reasoning.Premise);
 }
 
+export function byAssociative(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.Associative, reference);
+}
+
 export function byDefinitionOfImplies(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.DefinitionOfImplies, reference);
 }
@@ -54,33 +58,63 @@ export function byConjunction(expr: AstExpr, reference1: AstExpr, reference2: As
     return justify(expr, Reasoning.Conjunction, reference1, reference2);
 }
 
-export function byElimination(expr: AstExpr, reference: AstExpr): AstExpr {
-    if (reference.type == AstExprKind.Or && reference.flavor == Flavor.Implies) {
-        // Be specific about what kind of elimination when applicable
-        if (areExprsIdentical(reference.b, expr)) {
-            return justify(expr, Reasoning.ModusPonens, reference);
-        } else if (areExprsIdentical(reference.a, expr)) {
-            return justify(expr, Reasoning.ModusTollens, reference);
+export function byElimination(expr: AstExpr, group: AstExpr, counter: AstExpr): AstExpr {
+    let reasoning = Reasoning.Elimination;
+
+    if (group.type == AstExprKind.Or && group.flavor == Flavor.Implies) {
+        if (areExprsIdentical(group.b, expr)) {
+            reasoning = Reasoning.ModusPonens;
+        } else if (areExprsIdentical(group.a, expr)) {
+            reasoning = Reasoning.ModusTollens;
         }
     }
 
-    return justify(expr, Reasoning.Elimination, reference);
+    return justify(expr, reasoning, group, counter);
 }
 
 // You can forcefully justify by elimination using this function
 // (mostly for testing)
-export function byStrictElimination(expr: AstExpr, reference: AstExpr): AstExpr {
-    return justify(expr, Reasoning.Elimination, reference);
+export function byStrictElimination(expr: AstExpr, group: AstExpr, counter: AstExpr): AstExpr {
+    return justify(expr, Reasoning.Elimination, group, counter);
 }
 
 // You can forcefully justify by modus ponens using this function
 // (mostly for testing, since modus ponens will automatically be used for the justification in 'byElimination' when applicable)
-export function byStrictModusPonens(expr: AstExpr, reference: AstExpr): AstExpr {
-    return justify(expr, Reasoning.ModusPonens, reference);
+export function byStrictModusPonens(expr: AstExpr, group: AstExpr, counter: AstExpr): AstExpr {
+    return justify(expr, Reasoning.ModusPonens, group, counter);
 }
 
 // You can forcefully justify by modus tollens using this function
 // (mostly for testing, since modus tollens will automatically be used for the justification in 'byElimination' when applicable)
-export function byStrictModusTollens(expr: AstExpr, reference: AstExpr): AstExpr {
-    return justify(expr, Reasoning.ModusTollens, reference);
+export function byStrictModusTollens(expr: AstExpr, group: AstExpr, counter: AstExpr): AstExpr {
+    return justify(expr, Reasoning.ModusTollens, group, counter);
+}
+
+export function reasoningName(reasoning: Reasoning) {
+    switch (reasoning) {
+        case Reasoning.Premise: return "premise";
+        case Reasoning.DefinitionOfImplies: return "definition of implies";
+        case Reasoning.Associative: return "associative";
+        case Reasoning.Distributive: return "distributive";
+        case Reasoning.Identity: return "identity";
+        case Reasoning.Negation: return "negation";
+        case Reasoning.DoubleNegation: return "double negation";
+        case Reasoning.Idempotent: return "idempotent";
+        case Reasoning.UniversalBounds: return "universal bounds";
+        case Reasoning.DeMorgans: return "de morgan's";
+        case Reasoning.Absorption: return "absorption";
+        case Reasoning.NegativeAssertion: return "negative assertion";
+        case Reasoning.Commutative: return "commutative";
+        case Reasoning.ModusPonens: return "modus ponens";
+        case Reasoning.ModusTollens: return "modes tollens";
+        case Reasoning.Generalization: return "generalization";
+        case Reasoning.Specialization: return "specialization";
+        case Reasoning.Conjunction: return "conjunction";
+        case Reasoning.Elimination: return "elimination";
+        case Reasoning.Transitivity: return "transitivity";
+        case Reasoning.ProofByDivisionOfCases: return "proof by division of cases";
+        case Reasoning.ContradictionRule: return "contradiction rule";
+    }
+
+    throw new Error("reasoningName() got unrecognized justification");
 }
