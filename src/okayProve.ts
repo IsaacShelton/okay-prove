@@ -4,14 +4,16 @@ import { breakDown } from './breakDown';
 import { canConclude } from './canConclude';
 import { deduce } from './deduce';
 import { byPremise } from './justification';
+import { initialSimplify } from './simplify';
 import { simplifyConclusion } from './simplifyConclusion';
+import { Waterfall } from './waterfall';
 
 export class Structure {
     facts: AstExpr[];
-    conclusion: AstExpr;
+    conclusion: Waterfall;
 
     constructor(ast: Ast) {
-        this.facts = ast.premises.map(byPremise);
+        this.facts = ast.premises.map(byPremise).map(initialSimplify);
         this.conclusion = simplifyConclusion(ast.conclusion);
     }
 
@@ -24,28 +26,7 @@ export class Structure {
         // Work forward by deducing from known facts
         this.facts = deduce(this.facts);
 
-        /*
-        // Work forward by deducing from known facts
-        {
-            let newFacts = deduce(this.facts);
-
-            if (newFacts.length !== 0) {
-                this.facts = this.facts.concat(newFacts);
-                result = Result.Progress;
-            }
-        }
-
-        // Work backwards by trying to prove constraints from known facts
-        {
-            let solvedConstraints = moveTowardConstraints(this.facts, this.constraints);
-
-            if (solvedConstraints.length !== 0) {
-                this.facts = this.facts.concat(solvedConstraints);
-                result = Result.Progress;
-            }
-        }
-        */
-
+        // Try to reach the conclusion given the facts we know
         let solution = this.conclusionReached();
 
         if (solution) {
@@ -58,7 +39,13 @@ export class Structure {
     }
 
     conclusionReached(): AstExpr | null {
-        return canConclude(this.facts, this.conclusion);
+        let couldConclude = canConclude(this.facts, this.conclusion.getLatest());
+
+        if (couldConclude) {
+            return this.conclusion.unwind(couldConclude);
+        } else {
+            return null;
+        }
     }
 
     hasFact(expr: AstExpr): boolean {

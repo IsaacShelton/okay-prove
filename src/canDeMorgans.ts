@@ -3,14 +3,13 @@ import { AstExpr, AstExprKind } from "./ast";
 import { and, not, or } from "./astExprMaker";
 import { byDeMorgans, byDoubleNegation } from "./justification";
 
-export function canDeMorgans(from: AstExpr, to: AstExpr): AstExpr | null {
-    return canDeMorgansForward(from, to)
-        ?? canDeMorgansBackwards(from, to)
-        ?? canDeMorgansForward(doubleNegate(from), to)
-        ?? canDeMorgansBackwards(from, doubleNegate(to));
+export function canDeMorgans(from: AstExpr): AstExpr | null {
+    return canDeMorgansForward(from)
+        ?? canDeMorgansBackwards(from)
+        ?? canDeMorgansForward(doubleNegate(from))
 }
 
-export function canDeMorgansForward(from: AstExpr, to: AstExpr): AstExpr | null {
+export function canDeMorgansForward(from: AstExpr): AstExpr | null {
     // not (a or b) -> (not a) and (not b)
     // not (a and b) -> (not a) or (not b)
 
@@ -35,7 +34,7 @@ export function canDeMorgansForward(from: AstExpr, to: AstExpr): AstExpr | null 
     }
 }
 
-export function canDeMorgansBackwards(from: AstExpr, to: AstExpr): AstExpr | null {
+export function canDeMorgansBackwards(from: AstExpr): AstExpr | null {
     // (not a) and (not b) -> not (a or b) 
     // (not a) or (not b) -> not (a and b) 
 

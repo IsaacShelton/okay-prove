@@ -1,5 +1,6 @@
 import { areExprsIdentical, AstExpr, AstExprKind } from "./ast";
-import { and } from "./astExprMaker";
+import { and, or } from "./astExprMaker";
+import { canCommutative } from "./canCommutative";
 import { canDeMorgans } from "./canDeMorgans";
 import { canDoubleNegate } from "./canDoubleNegate";
 import { byConjunction, byConjunctions, byGeneralization } from "./justification";
@@ -47,7 +48,8 @@ export function areExprsEquivalent(from: AstExpr, to: AstExpr, maxRecursion: num
         }
     }
 
-    return trial(canDeMorgans(from, to), to, maxRecursion)
+    return trial(canCommutative(from, to), to, maxRecursion)
+        ?? trial(canDeMorgans(from), to, maxRecursion)
         ?? trial(canDoubleNegate(from, to), to, maxRecursion);
 }
 

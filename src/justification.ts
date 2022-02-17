@@ -57,6 +57,10 @@ export function byDeMorgans(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.DeMorgans, reference);
 }
 
+export function byCommutative(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.Commutative, reference);
+}
+
 export function bySpecialization(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.Specialization, reference);
 }
@@ -91,8 +95,16 @@ export function byElimination(expr: AstExpr, group: AstExpr, counter: AstExpr): 
     if (group.type == AstExprKind.Or && group.flavor == Flavor.Implies) {
         if (areExprsIdentical(group.b, expr)) {
             reasoning = Reasoning.ModusPonens;
+
+            if (group.justification?.reasoning == Reasoning.DefinitionOfImplies) {
+                return justify(expr, reasoning, group.justification.references[0], counter);
+            }
         } else if (areExprsIdentical(group.a, expr)) {
             reasoning = Reasoning.ModusTollens;
+
+            if (group.justification?.reasoning == Reasoning.DefinitionOfImplies) {
+                return justify(expr, reasoning, group.justification.references[0], counter);
+            }
         }
     }
 
@@ -133,7 +145,7 @@ export function reasoningName(reasoning: Reasoning) {
         case Reasoning.NegativeAssertion: return "negative assertion";
         case Reasoning.Commutative: return "commutative";
         case Reasoning.ModusPonens: return "modus ponens";
-        case Reasoning.ModusTollens: return "modes tollens";
+        case Reasoning.ModusTollens: return "modus tollens";
         case Reasoning.Generalization: return "generalization";
         case Reasoning.Specialization: return "specialization";
         case Reasoning.Conjunction: return "conjunction";

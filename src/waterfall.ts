@@ -16,7 +16,7 @@ import { justifyUnsafe, Reasoning } from "./justification";
 //                             simplified conclusion
 //
 export class Waterfall {
-    constructor(public reasonings: Reasoning[], public conclusionWaterfall: AstExpr[]) { }
+    constructor(public conclusionWaterfall: AstExpr[], public reasonings: Reasoning[]) { }
 
     unwind(reachedSimplification: AstExpr): AstExpr {
         assert(this.conclusionWaterfall.length == this.reasonings.length + 1, "Expected proper number of justifications to trace from simplified conclusion back to real conclusion");
@@ -26,9 +26,19 @@ export class Waterfall {
         // NOTE: We don't care about the last one, since that is what we reached
         for (let i = this.reasonings.length - 1; i >= 0; i--) {
             // Assume that each reasoning we use requires one and only one reference
-            running = justifyUnsafe(this.conclusionWaterfall[i - 1], this.reasonings[i], running);
+            running = justifyUnsafe(this.conclusionWaterfall[i], this.reasonings[i], running);
         }
 
         return running;
+    }
+
+    push(simplification: AstExpr, reasoning: Reasoning) {
+        this.conclusionWaterfall.push(simplification);
+        this.reasonings.push(reasoning);
+    }
+
+    getLatest(): AstExpr {
+        assert(this.conclusionWaterfall.length > 0);
+        return this.conclusionWaterfall[this.conclusionWaterfall.length - 1];
     }
 }

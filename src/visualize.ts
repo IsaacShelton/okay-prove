@@ -2,6 +2,10 @@
 import { AstExpr, AstExprKind } from "./ast";
 import { Justification, reasoningName } from "./justification";
 
+export function logProof(expr: AstExpr) {
+    console.log(visualizeProof(expr));
+}
+
 export function visualizeProof(expr: AstExpr, depth: number = 0): string {
     let result = " ".repeat(depth) + visualizeExpr(expr);
 

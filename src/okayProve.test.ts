@@ -1,6 +1,6 @@
 
 import { and, not, or, symbol } from './astExprMaker';
-import { byElimination, byPremise, bySpecialization } from './justification';
+import { byCommutative, byDeMorgans, byDoubleNegation, byElimination, byPremise, bySpecialization } from './justification';
 import { okayProve } from './okayProve';
 import { parseOrFail } from './testing';
 
@@ -95,8 +95,73 @@ test("proof 9", () => {
 
 test("proof 10", () => {
     let ast = parseOrFail(`
+        not a and not b
+        not not not not not not not not not (a or b)
+    `);
+
+    expect(okayProve(ast)).not.toBeNull();
+});
+
+test("proof 11", () => {
+    let ast = parseOrFail(`
         not (a or b)
         ( (not not not a) and (not not not b) )
+    `);
+
+    let proof;
+    proof = byPremise(not(or("a", "b")));
+    proof = byDeMorgans(and(not("a"), not("b")), proof);
+    proof = byDoubleNegation(and(not(not(not("a"))), not("b")), proof);
+    proof = byDoubleNegation(and(not(not(not("a"))), not(not(not("b")))), proof);
+
+    expect(okayProve(ast)).toEqual(proof);
+});
+
+test("proof 12", () => {
+    let ast = parseOrFail(`
+        p and q
+        q and p
+    `);
+
+    let premise = byPremise(and("p", "q"));
+    let proof = byCommutative(and("q", "p"), premise);
+
+    expect(okayProve(ast)).toEqual(proof);
+});
+
+test("proof 13", () => {
+    let ast = parseOrFail(`
+        p or q
+        q or p
+    `);
+
+    expect(okayProve(ast)).not.toBeNull();
+});
+
+test("proof 14", () => {
+    let ast = parseOrFail(`
+        p implies q
+        p
+        q
+    `);
+
+    expect(okayProve(ast)).not.toBeNull();
+});
+
+test("proof 15", () => {
+    let ast = parseOrFail(`
+        p implies q
+        not q
+        not p
+    `);
+
+    expect(okayProve(ast)).not.toBeNull();
+});
+
+test("proof 16", () => {
+    let ast = parseOrFail(`
+        (p and q) or (p and r)
+        p
     `);
 
     expect(okayProve(ast)).not.toBeNull();

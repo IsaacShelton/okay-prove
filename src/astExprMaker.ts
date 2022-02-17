@@ -46,6 +46,10 @@ export function implies(a: AstExpr | string, b: AstExpr | string): AstExpr {
     return { type: AstExprKind.Implies, a: autoSymbol(a), b: autoSymbol(b), flavor: Flavor.Naked };
 }
 
+export function binaryExpr(type: AstExprKind.And | AstExprKind.Or | AstExprKind.Implies, a: AstExpr | string, b: AstExpr | string, flavor: Flavor): AstExpr {
+    return { type, a: autoSymbol(a), b: autoSymbol(b), flavor };
+}
+
 export function reducedImplies(a: AstExpr | string, b: AstExpr | string): AstExpr {
     let expr: AstBinaryExpr = or(not(a), b) as AstBinaryExpr;
     expr.flavor = Flavor.Implies;
@@ -58,6 +62,10 @@ export function any(...args: (AstExpr | string)[]): AstExpr {
 
 export function all(...args: (AstExpr | string)[]): AstExpr {
     return { type: AstExprKind.All, children: args.map(autoSymbol) };
+}
+
+export function selectExpr(type: AstExprKind.Any | AstExprKind.All, ...args: (AstExpr | string)[]): AstExpr {
+    return { type, children: args.map(autoSymbol) };
 }
 
 export function tautology(): AstExpr {
