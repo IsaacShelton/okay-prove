@@ -1,5 +1,6 @@
 
 import { areExprsIdentical, AstExpr, AstExprKind, Flavor } from './ast';
+import { and } from './astExprMaker';
 
 export enum Reasoning {
     Premise,
@@ -34,16 +35,26 @@ function justify(expr: AstExpr, reasoning: Reasoning, ...references: AstExpr[]):
     return { ...expr, justification: new Justification(reasoning, references) };
 }
 
+export const justifyUnsafe = justify;
+
 export function byPremise(expr: AstExpr): AstExpr {
     return justify(expr, Reasoning.Premise);
+}
+
+export function byDefinitionOfImplies(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.DefinitionOfImplies, reference);
 }
 
 export function byAssociative(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.Associative, reference);
 }
 
-export function byDefinitionOfImplies(expr: AstExpr, reference: AstExpr): AstExpr {
-    return justify(expr, Reasoning.DefinitionOfImplies, reference);
+export function byDoubleNegation(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.DoubleNegation, reference);
+}
+
+export function byDeMorgans(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.DeMorgans, reference);
 }
 
 export function bySpecialization(expr: AstExpr, reference: AstExpr): AstExpr {
@@ -56,6 +67,22 @@ export function byGeneralization(expr: AstExpr, reference: AstExpr): AstExpr {
 
 export function byConjunction(expr: AstExpr, reference1: AstExpr, reference2: AstExpr): AstExpr {
     return justify(expr, Reasoning.Conjunction, reference1, reference2);
+}
+
+export function byConjunctions(expr: AstExpr, ...references: AstExpr[]): AstExpr {
+    if (references.length < 1) throw new Error("byConjunctions() cannot create expression from no sub expressions");
+
+    if (references.length == 1) {
+        return references[0];
+    }
+
+    let result = byConjunction(and(references[0], references[1]), references[0], references[1]);
+
+    for (let i = 2; i < references.length; i++) {
+        result = byConjunction(and(result, references[i]), result, references[i]);
+    }
+
+    return result;
 }
 
 export function byElimination(expr: AstExpr, group: AstExpr, counter: AstExpr): AstExpr {

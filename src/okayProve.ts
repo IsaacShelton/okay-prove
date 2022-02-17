@@ -1,7 +1,7 @@
 
-import unimplemented from 'ts-unimplemented';
 import { areExprsIdentical, Ast, AstExpr } from './ast';
 import { breakDown } from './breakDown';
+import { canConclude } from './canConclude';
 import { deduce } from './deduce';
 import { byPremise } from './justification';
 import { simplifyConclusion } from './simplifyConclusion';
@@ -58,15 +58,7 @@ export class Structure {
     }
 
     conclusionReached(): AstExpr | null {
-        // Dumb way of detecting conclusion
-
-        for (let fact of this.facts) {
-            if (areExprsIdentical(fact, this.conclusion)) {
-                return fact;
-            }
-        }
-
-        return null;
+        return canConclude(this.facts, this.conclusion);
     }
 
     hasFact(expr: AstExpr): boolean {

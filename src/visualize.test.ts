@@ -52,7 +52,7 @@ test("visualizeExpr test 7", () => {
 
 // ---
 
-test("visualize test 1", () => {
+test("visualizeProof test 1", () => {
     let expr = okayProve(parseOrFail(`
         a and b
         a
