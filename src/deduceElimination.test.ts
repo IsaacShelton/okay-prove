@@ -106,7 +106,7 @@ test("deduceElimination compound example 1", () => {
     let facts = [any("a", "b", "c"), not("b")];
 
     expect(deduceElimination(facts)).toEqual([
-        byElimination(any("a", "c"), facts[0], facts[1])
+        byElimination(or("a", "c"), facts[0], facts[1])
     ]);
 });
 
@@ -114,7 +114,7 @@ test("deduceElimination compound example 2", () => {
     let facts = [any("a", "b", "c"), not("a")];
 
     expect(deduceElimination(facts)).toEqual([
-        byElimination(any("b", "c"), facts[0], facts[1])
+        byElimination(or("b", "c"), facts[0], facts[1])
     ]);
 });
 
@@ -122,7 +122,7 @@ test("deduceElimination compound example 3", () => {
     let facts = [any("a", "b", "c"), not("c")];
 
     expect(deduceElimination(facts)).toEqual([
-        byElimination(any("a", "b"), facts[0], facts[1])
+        byElimination(or("a", "b"), facts[0], facts[1])
     ])
 });
 

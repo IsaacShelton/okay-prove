@@ -1,6 +1,7 @@
 
 import { AstExpr, mergeExprLists } from './ast';
 import { deduceCompoundOr } from './deduceCompoundOr';
+import { deduceDistribution } from './deduceDistribution';
 import { deduceElimination } from './deduceElimination';
 
 // Returns new facts that can be concluded that are not contained
@@ -10,6 +11,7 @@ export function deduce(facts: AstExpr[]): AstExpr[] {
         facts,
         facts.flatMap(deduceCompoundOr),
         deduceElimination(facts),
+        facts.flatMap(deduceDistribution),
     );
 }
 

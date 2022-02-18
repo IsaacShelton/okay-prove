@@ -4,6 +4,7 @@ import { exit } from 'process';
 import { lex, LexError } from './lex';
 import { okayProve } from "./okayProve";
 import { parse, ParseError } from './parse';
+import { visualizeProof } from './visualize';
 
 export function main(filename: string, options: any[]) {
     let contents;
@@ -34,6 +35,6 @@ export function main(filename: string, options: any[]) {
     if (result == null) {
         console.error("Could not prove ;(");
     } else {
-        console.log(result);
+        console.log(visualizeProof(result));
     }
 }

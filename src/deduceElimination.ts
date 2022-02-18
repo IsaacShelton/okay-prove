@@ -51,9 +51,20 @@ function deduceEliminationForAny(expr: AstSelectExpr, facts: AstExpr[]): AstExpr
         let opposition = tryFindOpposite(expr.children[i], facts);
 
         if (opposition) {
-            return [
-                byElimination(any(...expr.children.slice(0, i), ...expr.children.slice(i + 1)), expr, opposition)
-            ]
+            if (expr.children.length == 3) {
+                // Auto-collapse to 'or'
+                let remaining = [...expr.children];
+                remaining.splice(i, 1);
+
+                return [
+                    byElimination(or(remaining[0], remaining[1]), expr, opposition)
+                ]
+            } else {
+
+                return [
+                    byElimination(any(...expr.children.slice(0, i), ...expr.children.slice(i + 1)), expr, opposition)
+                ]
+            }
         }
     }
 

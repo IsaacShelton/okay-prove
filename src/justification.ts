@@ -49,6 +49,10 @@ export function byAssociative(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.Associative, reference);
 }
 
+export function byDistributive(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.Distributive, reference);
+}
+
 export function byDoubleNegation(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.DoubleNegation, reference);
 }

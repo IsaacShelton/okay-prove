@@ -48,7 +48,8 @@ function canCommutativeForSelectExprs(from: AstSelectExpr, to: AstSelectExpr): A
         }
     }
 
-    // NOTE: More than just commutative is going on here, but commutative is the most important
-    // (specialization may also have taken place, but we will ignore that for now)
+    // NOTE: More than just commutative is going on here, but commutative is the most important.
+    // In some cases specialization/idempotent/associative/etc may also have taken place, but we will ignore that for now.
+    // TODO: Include justifications for all operations done here
     return byCommutative(selectExpr(from.type, ...result), from);
 }

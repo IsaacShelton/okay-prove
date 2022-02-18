@@ -1,5 +1,4 @@
 
-import dedent from "ts-dedent";
 import { all, and, any, contradiction, implies, not, or, tautology } from "./astExprMaker";
 import { okayProve } from "./okayProve";
 import { parseOrFail } from "./testing";
@@ -62,9 +61,8 @@ test("visualizeProof test 1", () => {
         fail();
     }
 
-    expect(visualizeProof(expr)).toBe(dedent(
-        ` a and b [premise]
-        a [specialization]`
-    ));
+    expect(visualizeProof(expr)).toBe(
+        "a and b [premise]\n a [specialization]"
+    );
 });
 

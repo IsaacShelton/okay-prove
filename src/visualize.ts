@@ -17,7 +17,22 @@ export function visualizeProof(expr: AstExpr, depth: number = 0): string {
         }
     }
 
-    return result;
+    return depth == 0 ? reverseIndentation(result) : result;
+}
+
+function reverseIndentation(contents: string): string {
+    let lines = contents.split(/\r?\n/);
+    let maxIndentation = lines.reduce((maxIndentation, line) => Math.max(maxIndentation, line.search(/\S|$/)), 0);
+
+    return lines.map((line) => {
+        let indentation = line.search(/\S|$/);
+        try {
+            return " ".repeat(maxIndentation - indentation) + line.slice(indentation);
+        } catch (e: any) {
+            console.log(indentation);
+            throw e;
+        }
+    }).join("\n");
 }
 
 export function visualizeExpr(expr: AstExpr): string {

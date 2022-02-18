@@ -1,5 +1,5 @@
 import { areExprsIdentical, AstExpr, AstExprKind } from "./ast";
-import { and, or } from "./astExprMaker";
+import { and } from "./astExprMaker";
 import { canCommutative } from "./canCommutative";
 import { canDeMorgans } from "./canDeMorgans";
 import { canDoubleNegate } from "./canDoubleNegate";
@@ -60,7 +60,7 @@ function canConstruct(facts: AstExpr[], conclusion: AstExpr): AstExpr | null {
         case AstExprKind.Contradiction:
             return null;
         case AstExprKind.Not:
-            return canConclude(facts, opposite(conclusion));
+            return null;
         case AstExprKind.Or: {
             let a = canConclude(facts, conclusion.a);
             if (a !== null) return byGeneralization(conclusion, a);

@@ -3,6 +3,7 @@ import { and, not, or, symbol } from './astExprMaker';
 import { byCommutative, byDeMorgans, byDoubleNegation, byElimination, byPremise, bySpecialization } from './justification';
 import { okayProve } from './okayProve';
 import { parseOrFail } from './testing';
+import { logProof } from './visualize';
 
 test("proof 1", () => {
     let ast = parseOrFail(`
@@ -78,7 +79,7 @@ test("proof 7", () => {
 test("proof 8", () => {
     let ast = parseOrFail(`
         (not not a) and (not not b)
-        not (a or b)
+        not (not a or not b)
     `);
 
     expect(okayProve(ast)).not.toBeNull();
@@ -163,6 +164,28 @@ test("proof 16", () => {
         (p and q) or (p and r)
         p
     `);
+
+    expect(okayProve(ast)).not.toBeNull();
+});
+
+test("proof 17", () => {
+    let ast = parseOrFail(`
+        ((a or b) and q) or ((b or a) and r)
+        b or a
+    `);
+
+    logProof(okayProve(ast)!);
+
+    expect(okayProve(ast)).not.toBeNull();
+});
+
+test("proof 18", () => {
+    let ast = parseOrFail(`
+        (q and (a or b)) or ((b or a) and r)
+        b or a
+    `);
+
+    logProof(okayProve(ast)!);
 
     expect(okayProve(ast)).not.toBeNull();
 });
