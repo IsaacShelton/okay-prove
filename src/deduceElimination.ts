@@ -60,7 +60,6 @@ function deduceEliminationForAny(expr: AstSelectExpr, facts: AstExpr[]): AstExpr
                     byElimination(or(remaining[0], remaining[1]), expr, opposition)
                 ]
             } else {
-
                 return [
                     byElimination(any(...expr.children.slice(0, i), ...expr.children.slice(i + 1)), expr, opposition)
                 ]

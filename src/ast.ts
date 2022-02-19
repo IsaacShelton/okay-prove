@@ -104,6 +104,6 @@ export function mergeExprLists(firstList: AstExpr[], ...lists: AstExpr[][]): Ast
     return newList;
 }
 
-export function dedupe(list: AstExpr[]): AstExpr[] {
+export function dedupeExprList(list: AstExpr[]): AstExpr[] {
     return mergeExprLists([], list);
 }

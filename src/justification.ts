@@ -1,31 +1,7 @@
 
 import { areExprsIdentical, AstExpr, AstExprKind, Flavor } from './ast';
 import { and } from './astExprMaker';
-
-export enum Reasoning {
-    Premise,
-    DefinitionOfImplies,
-    Associative,
-    Distributive,
-    Identity,
-    Negation,
-    DoubleNegation,
-    Idempotent,
-    UniversalBounds,
-    DeMorgans,
-    Absorption,
-    NegativeAssertion,
-    Commutative,
-    ModusPonens,
-    ModusTollens,
-    Generalization,
-    Specialization,
-    Conjunction,
-    Elimination,
-    Transitivity,
-    ProofByDivisionOfCases,
-    ContradictionRule,
-}
+import { Reasoning } from './reasoning';
 
 export class Justification {
     constructor(public reasoning: Reasoning, public references: AstExpr[]) { }
@@ -131,33 +107,4 @@ export function byStrictModusPonens(expr: AstExpr, group: AstExpr, counter: AstE
 // (mostly for testing, since modus tollens will automatically be used for the justification in 'byElimination' when applicable)
 export function byStrictModusTollens(expr: AstExpr, group: AstExpr, counter: AstExpr): AstExpr {
     return justify(expr, Reasoning.ModusTollens, group, counter);
-}
-
-export function reasoningName(reasoning: Reasoning) {
-    switch (reasoning) {
-        case Reasoning.Premise: return "premise";
-        case Reasoning.DefinitionOfImplies: return "definition of implies";
-        case Reasoning.Associative: return "associative";
-        case Reasoning.Distributive: return "distributive";
-        case Reasoning.Identity: return "identity";
-        case Reasoning.Negation: return "negation";
-        case Reasoning.DoubleNegation: return "double negation";
-        case Reasoning.Idempotent: return "idempotent";
-        case Reasoning.UniversalBounds: return "universal bounds";
-        case Reasoning.DeMorgans: return "de morgan's";
-        case Reasoning.Absorption: return "absorption";
-        case Reasoning.NegativeAssertion: return "negative assertion";
-        case Reasoning.Commutative: return "commutative";
-        case Reasoning.ModusPonens: return "modus ponens";
-        case Reasoning.ModusTollens: return "modus tollens";
-        case Reasoning.Generalization: return "generalization";
-        case Reasoning.Specialization: return "specialization";
-        case Reasoning.Conjunction: return "conjunction";
-        case Reasoning.Elimination: return "elimination";
-        case Reasoning.Transitivity: return "transitivity";
-        case Reasoning.ProofByDivisionOfCases: return "proof by division of cases";
-        case Reasoning.ContradictionRule: return "contradiction rule";
-    }
-
-    throw new Error("reasoningName() got unrecognized justification");
 }

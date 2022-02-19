@@ -35,6 +35,6 @@ export function main(filename: string, options: any) {
     if (result == null) {
         console.error("Could not prove ;(");
     } else {
-        console.log(visualizeProof(result));
+        console.log(visualizeProof(result, options.format));
     }
 }

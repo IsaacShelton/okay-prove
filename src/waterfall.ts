@@ -1,7 +1,8 @@
 
 import assert from "assert";
 import { AstExpr } from "./ast";
-import { justifyUnsafe, Reasoning } from "./justification";
+import { justifyUnsafe } from "./justification";
+import { Reasoning } from "./reasoning";
 
 // Representation of how to get from simplified conclusion
 // back to the real conclusion

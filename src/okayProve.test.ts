@@ -2,8 +2,7 @@
 import { and, not, or, symbol } from './astExprMaker';
 import { byCommutative, byDeMorgans, byDoubleNegation, byElimination, byPremise, bySpecialization } from './justification';
 import { okayProve } from './okayProve';
-import { parseOrFail } from './testing';
-import { logProof } from './visualize';
+import { expectProvable, parseOrFail } from './testing';
 
 test("proof 1", () => {
     let ast = parseOrFail(`
@@ -29,78 +28,62 @@ test("proof 2", () => {
 });
 
 test("proof 3", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         a or b or c or d
         not b
         not a
         not d
         c
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 4", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         not not a
         a
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 5", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         a
         not not a
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 6", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         not (a or b)
         (not a) and (not b)
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 7", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         (not a) and (not b)
         not (a or b)
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 8", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         (not not a) and (not not b)
         not (not a or not b)
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 9", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         not (a or b)
         not not ( (not a) and (not b) )
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 10", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         not a and not b
         not not not not not not not not not (a or b)
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 11", () => {
@@ -131,61 +114,107 @@ test("proof 12", () => {
 });
 
 test("proof 13", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         p or q
         q or p
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 14", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         p implies q
         p
         q
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 15", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         p implies q
         not q
         not p
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 16", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         (p and q) or (p and r)
         p
     `);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 17", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         ((a or b) and q) or ((b or a) and r)
         b or a
     `);
-
-    logProof(okayProve(ast)!);
-
-    expect(okayProve(ast)).not.toBeNull();
 });
 
 test("proof 18", () => {
-    let ast = parseOrFail(`
+    expectProvable(`
         (q and (a or b)) or ((b or a) and r)
         b or a
     `);
+});
 
-    logProof(okayProve(ast)!);
+test("proof 19", () => {
+    expectProvable(`
+        p or not(r or q)
+        s implies r
+        not p
+        not s
+    `);
+});
 
-    expect(okayProve(ast)).not.toBeNull();
+test("proof 20", () => {
+    expectProvable(`
+        p and q implies r
+        u implies not r
+        u and q
+        not p
+    `);
+});
+
+test("proof 21", () => {
+    expectProvable(`
+        p implies (q implies r)
+        not ((q implies r) and s)
+        not (p and s) implies u and w
+        x implies not u
+        s
+        not x
+    `);
+});
+
+test("proof 22", () => {
+    expectProvable(`
+        H or M
+        H implies K
+        not K
+        M implies L
+        L
+    `);
+});
+
+test("proof 23", () => {
+    expectProvable(`
+        E implies (G implies U)
+        G and not U
+        not E
+    `);
+});
+
+test("proof 24", () => {
+    expectProvable(`
+        a implies b
+        b implies c
+        a implies c
+    `);
+});
+
+test("proof 25", () => {
+    expectProvable(`
+        q implies (p and not p)
+        not q
+    `);
 });

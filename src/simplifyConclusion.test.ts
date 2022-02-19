@@ -1,6 +1,6 @@
 
 import { any, or } from "./astExprMaker";
-import { Reasoning } from "./justification";
+import { Reasoning } from "./reasoning";
 import { simplifyConclusion } from "./simplifyConclusion";
 import { Waterfall } from "./waterfall";
 

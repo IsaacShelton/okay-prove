@@ -1,5 +1,5 @@
 
-import { areExprsIdentical, Ast, AstExpr, isExprIncluded, mergeExprLists } from './ast';
+import { areExprsIdentical, Ast, AstExpr, isExprIncluded } from './ast';
 import { breakDown } from './breakDown';
 import { canConclude } from './canConclude';
 import { deduce } from './deduce';

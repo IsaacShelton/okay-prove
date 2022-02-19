@@ -1,4 +1,5 @@
-import { AstExpr, AstExprKind, dedupe as dedupeExprList } from "./ast";
+
+import { AstExpr, AstExprKind, dedupeExprList } from "./ast";
 import { deduce } from "./deduce";
 import { opposite } from "./opposite";
 

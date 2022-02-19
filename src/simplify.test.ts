@@ -1,5 +1,5 @@
 
-import { removeImplies } from './simplify';
+import { removeImplies } from './removeImplies';
 import { parseForTesting } from './testing';
 import { Ast } from './ast';
 import { and, implies, reducedImplies } from './astExprMaker';

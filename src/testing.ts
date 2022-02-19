@@ -2,6 +2,7 @@
 import { Ast } from './ast';
 import { parse, ParseError } from './parse';
 import { lex, LexError } from './lex';
+import { okayProve } from './okayProve';
 
 export function parseForTesting(content: string): Ast | ParseError {
     let tokens = lex(content);
@@ -27,4 +28,8 @@ export function parseOrFail(content: string): Ast {
     }
 
     return ast;
+}
+
+export function expectProvable(prompt: string) {
+    expect(okayProve(parseOrFail(prompt))).not.toBeNull();
 }

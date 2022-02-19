@@ -1,10 +1,11 @@
 
 import { assert } from "console";
 import { deepCopy } from "deep-copy-ts";
-import { areExprsIdentical, Ast, AstBinaryExpr, AstExpr, AstExprKind, Flavor } from "./ast";
+import { areExprsIdentical, AstBinaryExpr, AstExpr, AstExprKind, Flavor } from "./ast";
 import { binaryExpr } from "./astExprMaker";
 import { areExprsEquivalent } from "./canConclude";
-import { byDistributive, justifyUnsafe, Reasoning } from "./justification";
+import { byDistributive, justifyUnsafe } from "./justification";
+import { Reasoning } from "./reasoning";
 
 export function deduceDistribution(fact: AstExpr): AstExpr[] {
     // (p and q) or  (p and r)    ->    p and (q or r)

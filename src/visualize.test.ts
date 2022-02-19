@@ -1,8 +1,6 @@
 
 import { all, and, any, contradiction, implies, not, or, tautology } from "./astExprMaker";
-import { okayProve } from "./okayProve";
-import { parseOrFail } from "./testing";
-import { visualizeProof, visualizeExpr } from "./visualize";
+import { visualizeExpr } from "./visualize";
 
 test("visualizeExpr test 1", () => {
     expect(visualizeExpr(
@@ -48,21 +46,3 @@ test("visualizeExpr test 7", () => {
         )
     )).toEqual("(. or !) and (! or .)");
 });
-
-// ---
-
-test("visualizeProof test 1", () => {
-    let expr = okayProve(parseOrFail(`
-        a and b
-        a
-    `));
-
-    if (expr === null) {
-        fail();
-    }
-
-    expect(visualizeProof(expr)).toBe(
-        "a and b [premise]\n a [specialization]"
-    );
-});
-

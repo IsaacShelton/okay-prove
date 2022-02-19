@@ -1,10 +1,10 @@
 
 import { assert } from 'console';
 import { AstBinaryExpr, AstExpr, AstExprKind } from './ast';
-import { any, binaryExpr, not, or, selectExpr } from './astExprMaker';
+import { any, not, or } from './astExprMaker';
 import { isCompoundOr, reduceCompoundOr } from './compoundOr';
 import { findAndRemoveOneDoubleNegation } from './findAndRemoveOneDoubleNegation';
-import { Reasoning } from './justification';
+import { Reasoning } from './reasoning';
 import { Waterfall } from './waterfall';
 
 export function simplifyConclusion(conclusion: AstExpr): Waterfall {
