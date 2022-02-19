@@ -1,4 +1,4 @@
-# OkayProve
+# okay-prove
 Logical proof generator written in TypeScript
 
 
