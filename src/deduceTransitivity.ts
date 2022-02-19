@@ -42,7 +42,7 @@ function tryTransitivityForDisjunction(aRef: AstExpr, bRef: AstExpr, aChildren: 
                 let aChildrenWithout = [...aChildren.slice(0, i), ...aChildren.slice(i + 1)];
                 let bChildrenWithout = [...bChildren.slice(0, j), ...bChildren.slice(j + 1)];
                 return [
-                    byTransitivity(makeDisjunction(mergeExprLists(aChildrenWithout, bChildrenWithout)), aRef, bRef)
+                    byTransitivity(makeDisjunction([...aChildrenWithout, ...bChildrenWithout]), aRef, bRef)
                 ];
             }
         }

@@ -66,7 +66,7 @@ function swapSides(expr: AstBinaryExpr) {
 }
 
 // Does black magic in order to justify in-place modifications of a sub-expression that's inside a binary expression
-function justifyRearrangementInsideBinaryExpr(justifiedSubExpr: AstExpr, originalParentExpr: AstExpr, subExpr: AstExpr, owner: AstBinaryExpr, side: 0 | 1): AstExpr {
+export function justifyRearrangementInsideBinaryExpr(justifiedSubExpr: AstExpr, originalParentExpr: AstExpr, subExpr: AstExpr, owner: AstBinaryExpr, side: 0 | 1): AstExpr {
     let running = justifiedSubExpr;
     let parent: AstExpr = originalParentExpr;
 

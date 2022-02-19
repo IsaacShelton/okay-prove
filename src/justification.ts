@@ -41,6 +41,10 @@ export function byDoubleNegation(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.DoubleNegation, reference);
 }
 
+export function byIdempotent(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.Idempotent, reference);
+}
+
 export function byUniversalBounds(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.UniversalBounds, reference);
 }
