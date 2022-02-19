@@ -1,10 +1,10 @@
 
-import { assert } from "console";
 import { deepCopy } from "deep-copy-ts";
-import { areExprsIdentical, AstBinaryExpr, AstExpr, AstExprKind, Flavor } from "./ast";
+import { AstBinaryExpr, AstExpr, AstExprKind, Flavor } from "./ast";
 import { binaryExpr } from "./astExprMaker";
 import { areExprsEquivalent } from "./canConclude";
 import { byDistributive, justifyUnsafe } from "./justification";
+import { justifyInsideBinaryExpr } from "./justifyInside";
 import { Reasoning } from "./reasoning";
 
 export function deduceDistribution(fact: AstExpr): AstExpr[] {
@@ -30,7 +30,7 @@ export function deduceDistribution(fact: AstExpr): AstExpr[] {
             let stretch = areExprsEquivalent(bChild, aChild);
 
             if (stretch && (bIndex == 0 || bIndex == 1)) {
-                let preArrangement = justifyRearrangementInsideBinaryExpr(stretch, fact, bChild, fact.b, bIndex);
+                let preArrangement = justifyInsideBinaryExpr(stretch, fact, bChild, fact.b, bIndex);
 
                 // Justify commutativity of terms
                 if (aIndex != bIndex) {
@@ -63,35 +63,6 @@ function swapSides(expr: AstBinaryExpr) {
     let tmp = expr.a;
     expr.a = expr.b;
     expr.b = tmp;
-}
-
-// Does black magic in order to justify in-place modifications of a sub-expression that's inside a binary expression
-export function justifyRearrangementInsideBinaryExpr(justifiedSubExpr: AstExpr, originalParentExpr: AstExpr, subExpr: AstExpr, owner: AstBinaryExpr, side: 0 | 1): AstExpr {
-    let running = justifiedSubExpr;
-    let parent: AstExpr = originalParentExpr;
-
-    if (areExprsIdentical(running, subExpr)) {
-        return parent;
-    }
-
-    while (running.justification) {
-        parent = justifyUnsafe(parent, running.justification.reasoning, deepCopy(parent));
-
-        if (side == 0) {
-            owner.a = running;
-        } else {
-            owner.b = running;
-        }
-
-        assert(running.justification.references.length >= 1);
-        running = running.justification.references[0];
-
-        if (areExprsIdentical(running, subExpr)) {
-            return parent;
-        }
-    }
-
-    throw new Error("justifyRearrangementInsideBinaryExpr() could not justify");
 }
 
 function switchAndOr(type: AstExprKind.And | AstExprKind.Or): AstExprKind.And | AstExprKind.Or {

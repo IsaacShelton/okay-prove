@@ -2,8 +2,8 @@
 import { AstBinaryExpr, AstExpr, AstExprKind, AstSelectExpr } from "./ast";
 import { assertion, binaryExpr, contradiction, selectExpr, tautology } from "./astExprMaker";
 import { areExprsEquivalent } from "./canConclude";
-import { justifyRearrangementInsideBinaryExpr } from "./deduceDistribution";
 import { byNegation } from "./justification";
+import { justifyInsideBinaryExpr, justifyInsideSelectExpr } from "./justifyInside";
 import { opposite } from "./opposite";
 
 export function deduceNegation(expr: AstExpr): AstExpr | null {
@@ -48,7 +48,7 @@ function deduceNegationForBinaryExpr(expr: AstBinaryExpr): AstExpr | null {
     let stretch = areExprsEquivalent(expr.b, opposite(expr.a));
 
     if (stretch) {
-        let parent = justifyRearrangementInsideBinaryExpr(stretch, expr, expr.b, expr, 1);
+        let parent = justifyInsideBinaryExpr(stretch, expr, expr.b, expr, 1);
 
         return byNegation(expr.type == AstExprKind.And ? contradiction() : tautology(), parent);
     } else {
@@ -79,7 +79,8 @@ function deduceNegationForSelectExpr(
             let stretch = areExprsEquivalent(expr.children[i], opposite(expr.children[j]));
 
             if (stretch) {
-                return byNegation(assertion(ifSoResultKind), stretch);
+                let parent = justifyInsideSelectExpr(stretch, expr, opposite(expr.children[j]), expr, i);
+                return byNegation(assertion(ifSoResultKind), parent);
             }
         }
     }

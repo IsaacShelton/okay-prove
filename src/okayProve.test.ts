@@ -312,11 +312,6 @@ test("proof 38", () => {
         q implies (p and not p)
         not q
     `);
-
-    logProofOrFail(`
-        q implies (p and not p)
-        not q
-    `);
 });
 
 /*
