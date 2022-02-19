@@ -2,7 +2,7 @@
 import { Ast } from './ast';
 import { ParseError } from './parse';
 import { parseForTesting } from './testing';
-import { implies, and, or, symbol, not } from './astExprMaker';
+import { implies, and, or, symbol, not, tautology, contradiction } from './astExprMaker';
 
 test("parse error on no content", () => {
     expect(parseForTesting("")).toBeInstanceOf(ParseError);
@@ -65,6 +65,20 @@ test("parse only conclusion example 8 - multiple groups", () => {
     expect(parseForTesting("x implies (c implies q) or (a and b)")).toEqual(new Ast(
         [],
         implies("x", or(implies("c", "q"), and("a", "b")))
+    ));
+});
+
+test("parse only conclusion example 9 - tautologies", () => {
+    expect(parseForTesting(". and .")).toEqual(new Ast(
+        [],
+        and(tautology(), tautology())
+    ));
+});
+
+test("parse only conclusion example 10 - contradictions", () => {
+    expect(parseForTesting("not ! or !")).toEqual(new Ast(
+        [],
+        or(not(contradiction()), contradiction())
     ));
 });
 

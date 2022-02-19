@@ -76,6 +76,30 @@ export function contradiction(): AstExpr {
     return { type: AstExprKind.Contradiction };
 }
 
+export function assertion(type: AstExprKind.Tautology | AstExprKind.Contradiction): AstExpr {
+    return { type };
+}
+
+export function makeConjunction(children: AstExpr[]): AstExpr {
+    if (children.length <= 0) throw new Error("makeConjunction() got no children to make conjunction with");
+
+    if (children.length == 1) return children[0];
+
+    if (children.length == 2) return and(children[0], children[1]);
+
+    return all(...children);
+}
+
+export function makeDisjunction(children: AstExpr[]): AstExpr {
+    if (children.length <= 0) throw new Error("makeDisjunction() got no children to make disjunction with");
+
+    if (children.length == 1) return children[0];
+
+    if (children.length == 2) return or(children[0], children[1]);
+
+    return any(...children);
+}
+
 function autoSymbol(expr: AstExpr | string): AstExpr {
     return typeof expr == "string" ? symbol(expr) : expr;
 }

@@ -11,7 +11,8 @@ export enum Reasoning {
     UniversalBounds,
     DeMorgans,
     Absorption,
-    NegativeAssertion,
+    NegationOfTautology,
+    NegationOfContradiction,
     Commutative,
     ModusPonens,
     ModusTollens,
@@ -41,7 +42,8 @@ export function reasoningFancyName(reasoning: Reasoning) {
         case Reasoning.UniversalBounds: return "Universal Bounds";
         case Reasoning.DeMorgans: return "De Morgan's";
         case Reasoning.Absorption: return "Absorption";
-        case Reasoning.NegativeAssertion: return "Negative Assertion";
+        case Reasoning.NegationOfTautology: return "Negation of Tautology";
+        case Reasoning.NegationOfContradiction: return "Negation of Contradiction";
         case Reasoning.Commutative: return "Commutative";
         case Reasoning.ModusPonens: return "Modus Ponens";
         case Reasoning.ModusTollens: return "Modus Tollens";

@@ -2,7 +2,7 @@
 import { CustomError } from 'ts-custom-error'
 import { Token, TokenKind } from './lex';
 import { Ast, AstExpr, AstExprKind, Flavor } from './ast';
-import { not, symbol } from './astExprMaker';
+import { contradiction, not, symbol, tautology } from './astExprMaker';
 
 export class ParseError extends CustomError {
     constructor(reason: string, tokens: Token[] | null = null, index: number | null = null) {
@@ -64,6 +64,10 @@ export class Parser {
         switch (token?.type) {
             case TokenKind.Symbol:
                 return symbol(token.name);
+            case TokenKind.Tautology:
+                return tautology();
+            case TokenKind.Contradiction:
+                return contradiction();
             case TokenKind.Not: {
                 let inner = this.parsePrimaryExpr();
 

@@ -81,13 +81,17 @@ export function areExprsIdentical(a: AstExpr, b: AstExpr): boolean {
 }
 
 export function isExprIncluded(array: AstExpr[], isolated: AstExpr): boolean {
-    for (let expr of array) {
-        if (areExprsIdentical(expr, isolated)) {
-            return true;
+    return whereExprIncluded(array, isolated) !== null;
+}
+
+export function whereExprIncluded(array: AstExpr[], isolated: AstExpr): number | null {
+    for (let i = 0; i < array.length; i++) {
+        if (areExprsIdentical(array[i], isolated)) {
+            return i;
         }
     }
 
-    return false;
+    return null;
 }
 
 export function mergeExprLists(firstList: AstExpr[], ...lists: AstExpr[][]): AstExpr[] {

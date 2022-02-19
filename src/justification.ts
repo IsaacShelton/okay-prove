@@ -1,6 +1,6 @@
 
 import { areExprsIdentical, AstExpr, AstExprKind, Flavor } from './ast';
-import { and } from './astExprMaker';
+import { and, contradiction, not, tautology } from './astExprMaker';
 import { Reasoning } from './reasoning';
 
 export class Justification {
@@ -29,12 +29,32 @@ export function byDistributive(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.Distributive, reference);
 }
 
+export function byIdentity(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.Identity, reference);
+}
+
+export function byNegation(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.Negation, reference);
+}
+
 export function byDoubleNegation(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.DoubleNegation, reference);
 }
 
+export function byUniversalBounds(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.UniversalBounds, reference);
+}
+
 export function byDeMorgans(expr: AstExpr, reference: AstExpr): AstExpr {
     return justify(expr, Reasoning.DeMorgans, reference);
+}
+
+export function byNegationOfTautology(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.NegationOfTautology, reference);
+}
+
+export function byNegationOfContradiction(expr: AstExpr, reference: AstExpr): AstExpr {
+    return justify(expr, Reasoning.NegationOfContradiction, reference);
 }
 
 export function byCommutative(expr: AstExpr, reference: AstExpr): AstExpr {
@@ -72,6 +92,7 @@ export function byConjunctions(expr: AstExpr, ...references: AstExpr[]): AstExpr
 export function byElimination(expr: AstExpr, group: AstExpr, counter: AstExpr): AstExpr {
     let reasoning = Reasoning.Elimination;
 
+    // Implies-related naming for elimination
     if (group.type == AstExprKind.Or && group.flavor == Flavor.Implies) {
         if (areExprsIdentical(group.b, expr)) {
             reasoning = Reasoning.ModusPonens;
@@ -91,6 +112,20 @@ export function byElimination(expr: AstExpr, group: AstExpr, counter: AstExpr): 
     return justify(expr, reasoning, group, counter);
 }
 
+export function byTransitivity(expr: AstExpr, aRef: AstExpr, bRef: AstExpr): AstExpr {
+    if (aRef.type == AstExprKind.Or
+        && aRef.justification?.reasoning == Reasoning.DefinitionOfImplies) {
+        aRef = aRef.justification.references[0];
+    }
+
+    if (bRef.type == AstExprKind.Or
+        && bRef.justification?.reasoning == Reasoning.DefinitionOfImplies) {
+        bRef = bRef.justification.references[0];
+    }
+
+    return justify(expr, Reasoning.Transitivity, aRef, bRef);
+}
+
 // You can forcefully justify by elimination using this function
 // (mostly for testing)
 export function byStrictElimination(expr: AstExpr, group: AstExpr, counter: AstExpr): AstExpr {
@@ -107,4 +142,8 @@ export function byStrictModusPonens(expr: AstExpr, group: AstExpr, counter: AstE
 // (mostly for testing, since modus tollens will automatically be used for the justification in 'byElimination' when applicable)
 export function byStrictModusTollens(expr: AstExpr, group: AstExpr, counter: AstExpr): AstExpr {
     return justify(expr, Reasoning.ModusTollens, group, counter);
+}
+
+export function byStrictTransitivity(expr: AstExpr, aRef: AstExpr, bRef: AstExpr): AstExpr {
+    return justify(expr, Reasoning.Transitivity, aRef, bRef);
 }

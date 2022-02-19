@@ -1,6 +1,7 @@
 
 import { and, not, or, symbol } from './astExprMaker';
 import { byCommutative, byDeMorgans, byDoubleNegation, byElimination, byPremise, bySpecialization } from './justification';
+import { logProof } from './log';
 import { okayProve } from './okayProve';
 import { expectProvable, parseOrFail } from './testing';
 
@@ -213,6 +214,69 @@ test("proof 24", () => {
 });
 
 test("proof 25", () => {
+    expectProvable(`
+        a implies b
+        b implies c
+        c implies d
+        d implies e
+        e implies f
+        a implies f
+    `);
+});
+
+test("proof 26", () => {
+    expectProvable(`
+        a or !
+        a
+    `);
+});
+
+test("proof 27", () => {
+    expectProvable(`
+        . and b
+        b
+    `);
+});
+
+test("proof 28", () => {
+    expectProvable(`
+        not . or b
+        b
+    `);
+});
+
+test("proof 29", () => {
+    expectProvable(`
+        not . or not !
+        .
+    `);
+});
+
+test("proof 30", () => {
+    expectProvable(`
+        .
+    `);
+});
+
+test("proof 31", () => {
+    expectProvable(`
+        not !
+    `);
+});
+
+test("proof 32", () => {
+    expectProvable(`
+        . and not !
+    `);
+});
+
+test("proof 33", () => {
+    expectProvable(`
+        . and (not !) and . and (not !) and . and (not !)
+    `);
+});
+
+test("proof 34", () => {
     expectProvable(`
         q implies (p and not p)
         not q

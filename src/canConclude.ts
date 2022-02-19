@@ -1,9 +1,9 @@
 import { areExprsIdentical, AstExpr, AstExprKind } from "./ast";
-import { and } from "./astExprMaker";
+import { and, assertion, contradiction, not, tautology } from "./astExprMaker";
 import { canCommutative } from "./canCommutative";
 import { canDeMorgans } from "./canDeMorgans";
 import { canDoubleNegate } from "./canDoubleNegate";
-import { byConjunction, byConjunctions, byGeneralization, bySpecialization } from "./justification";
+import { byConjunction, byConjunctions, byGeneralization, byPremise, bySpecialization } from "./justification";
 import { opposite } from "./opposite";
 
 export function canConclude(facts: AstExpr[], conclusion: AstExpr): AstExpr | null {
@@ -56,11 +56,17 @@ export function areExprsEquivalent(from: AstExpr, to: AstExpr, maxRecursion: num
 function canConstruct(facts: AstExpr[], conclusion: AstExpr): AstExpr | null {
     switch (conclusion.type) {
         case AstExprKind.Symbol:
+            return null;
         case AstExprKind.Tautology:
+            return byPremise(tautology());
         case AstExprKind.Contradiction:
             return null;
         case AstExprKind.Not:
-            return null;
+            if (conclusion.child.type == AstExprKind.Contradiction) {
+                return byPremise(not(contradiction()));
+            } else {
+                return null;
+            }
         case AstExprKind.Or: {
             let a = canConclude(facts, conclusion.a);
             if (a !== null) return byGeneralization(conclusion, a);

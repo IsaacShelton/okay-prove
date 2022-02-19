@@ -10,6 +10,8 @@ export enum TokenKind {
     And,
     Or,
     Implies,
+    Tautology,
+    Contradiction,
 };
 
 export type Token =
@@ -21,6 +23,8 @@ export type Token =
     | { type: TokenKind.And }
     | { type: TokenKind.Or }
     | { type: TokenKind.Implies }
+    | { type: TokenKind.Tautology }
+    | { type: TokenKind.Contradiction }
 
 export class LexError extends CustomError {
     constructor(reason: string) {
@@ -48,6 +52,10 @@ export function lex(content: string): Token[] | LexError {
                     return { type: TokenKind.Or };
                 case 'implies':
                     return { type: TokenKind.Implies };
+                case '.':
+                    return { type: TokenKind.Tautology };
+                case '!':
+                    return { type: TokenKind.Contradiction };
             }
 
             if (isValidVariableName(word)) {
