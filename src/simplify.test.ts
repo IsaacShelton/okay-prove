@@ -4,7 +4,6 @@ import { parseForTesting } from './testing';
 import { Ast } from './ast';
 import { and, implies, reducedImplies } from './astExprMaker';
 import { byDefinitionOfImplies } from './justification';
-import { visualizeProof } from './visualize';
 
 test("remove implies example 1", () => {
     let ast = parseForTesting("a implies b");

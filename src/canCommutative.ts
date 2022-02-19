@@ -2,7 +2,7 @@
 import { AstExpr, AstExprKind, AstSelectExpr } from "./ast";
 import { binaryExpr, selectExpr } from "./astExprMaker";
 import { areExprsEquivalent } from "./canConclude";
-import { byAssociative, byCommutative, bySpecialization } from "./justification";
+import { byCommutative } from "./justification";
 
 export function canCommutative(from: AstExpr, to: AstExpr): AstExpr | null {
     switch (from.type) {

@@ -58,6 +58,6 @@ export function canDeMorgansBackwards(from: AstExpr): AstExpr | null {
     }
 }
 
-function doubleNegate(expr: AstExpr): AstExpr {
+export function doubleNegate(expr: AstExpr): AstExpr {
     return byDoubleNegation(not(not(expr)), expr);
 }

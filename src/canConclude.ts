@@ -3,7 +3,7 @@ import { and } from "./astExprMaker";
 import { canCommutative } from "./canCommutative";
 import { canDeMorgans } from "./canDeMorgans";
 import { canDoubleNegate } from "./canDoubleNegate";
-import { byConjunction, byConjunctions, byGeneralization } from "./justification";
+import { byConjunction, byConjunctions, byGeneralization, bySpecialization } from "./justification";
 import { opposite } from "./opposite";
 
 export function canConclude(facts: AstExpr[], conclusion: AstExpr): AstExpr | null {
@@ -78,6 +78,15 @@ function canConstruct(facts: AstExpr[], conclusion: AstExpr): AstExpr | null {
             if (b === null) return null;
 
             return byConjunction(and(a, b), a, b);
+        }
+        case AstExprKind.Implies: {
+            let a = canConclude(facts, opposite(conclusion.a));
+            if (a !== null) return bySpecialization(conclusion, a);
+
+            let b = canConclude(facts, conclusion.b);
+            if (b !== null) return bySpecialization(conclusion, b);
+
+            return null;
         }
         case AstExprKind.Any: {
             for (let child of conclusion.children) {

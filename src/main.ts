@@ -6,7 +6,7 @@ import { okayProve } from "./okayProve";
 import { parse, ParseError } from './parse';
 import { visualizeProof } from './visualize';
 
-export function main(filename: string, options: any[]) {
+export function main(filename: string, options: any) {
     let contents;
 
     try {
@@ -30,7 +30,7 @@ export function main(filename: string, options: any[]) {
         exit(1);
     }
 
-    let result = okayProve(ast);
+    let result = okayProve(ast, options.trace);
 
     if (result == null) {
         console.error("Could not prove ;(");

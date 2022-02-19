@@ -5,7 +5,6 @@ import { areExprsIdentical, Ast, AstBinaryExpr, AstExpr, AstExprKind, Flavor } f
 import { binaryExpr } from "./astExprMaker";
 import { areExprsEquivalent } from "./canConclude";
 import { byDistributive, justifyUnsafe, Reasoning } from "./justification";
-import { logProof } from "./visualize";
 
 export function deduceDistribution(fact: AstExpr): AstExpr[] {
     // (p and q) or  (p and r)    ->    p and (q or r)

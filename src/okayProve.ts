@@ -6,6 +6,7 @@ import { deduce } from './deduce';
 import { byPremise } from './justification';
 import { initialSimplify } from './simplify';
 import { simplifyConclusion } from './simplifyConclusion';
+import { visualizeExpr } from './visualize';
 import { Waterfall } from './waterfall';
 
 export class Structure {
@@ -56,9 +57,13 @@ export class Structure {
         }
         return false;
     }
+
+    getKnownFactsAsString(): string {
+        return this.facts.map(visualizeExpr).join("\n");
+    }
 }
 
-export function okayProve(ast: Ast): AstExpr | null {
+export function okayProve(ast: Ast, printKnownFactsOnFailure: boolean = false): AstExpr | null {
     let structure = new Structure(ast);
 
     while (true) {
@@ -68,6 +73,9 @@ export function okayProve(ast: Ast): AstExpr | null {
             case 'progress':
                 continue;
             case 'stagnant':
+                if (printKnownFactsOnFailure) {
+                    console.log(structure.getKnownFactsAsString());
+                }
                 return null;
             default:
                 return result;

@@ -8,7 +8,7 @@ export function canDoubleNegate(from: AstExpr, to: AstExpr): AstExpr | null {
         ?? canDoubleNegateBackwards(from, to);
 }
 
-function canDoubleNegateForward(from: AstExpr, to: AstExpr): AstExpr | null {
+export function canDoubleNegateForward(from: AstExpr, to: AstExpr): AstExpr | null {
     if (to.type !== AstExprKind.Not) return null;
     if (to.child.type !== AstExprKind.Not) return null;
 
@@ -21,7 +21,7 @@ function canDoubleNegateForward(from: AstExpr, to: AstExpr): AstExpr | null {
     }
 }
 
-function canDoubleNegateBackwards(from: AstExpr, to: AstExpr): AstExpr | null {
+export function canDoubleNegateBackwards(from: AstExpr, to: AstExpr): AstExpr | null {
     if (from.type !== AstExprKind.Not) return null;
     if (from.child.type !== AstExprKind.Not) return null;
 

@@ -2,9 +2,8 @@
 import unimplemented from 'ts-unimplemented';
 import { CustomError } from 'ts-custom-error';
 import { AstExpr, AstExprKind, areExprsIdentical, Flavor } from './ast';
-import { binaryExpr, reducedImplies, selectExpr } from './astExprMaker';
-import { byDefinitionOfImplies, justifyUnsafe } from './justification';
-import { visualizeExpr } from './visualize';
+import { binaryExpr, not, reducedImplies, selectExpr } from './astExprMaker';
+import { byDefinitionOfImplies } from './justification';
 
 export class SimplificationError extends CustomError {
     constructor(reason: string) {
@@ -55,7 +54,10 @@ function findAndRemoveOneImplies(expr: AstExpr): AstExpr | null {
         case AstExprKind.Contradiction:
             return null;
         case AstExprKind.Not:
-            return findAndRemoveOneImplies(expr.child);
+            withRemoved = findAndRemoveOneImplies(expr.child);
+            if (withRemoved) return not(withRemoved);
+
+            return null;
         case AstExprKind.Or:
         case AstExprKind.And:
             withRemoved = findAndRemoveOneImplies(expr.a);
@@ -90,30 +92,4 @@ function findAndRemoveOneImplies(expr: AstExpr): AstExpr | null {
     }
 
     throw new SimplificationError("findAndRemoveOneImplies() got unrecognized AstExprKind");
-}
-
-// NOTE: Existing justifications in the provided expression
-// are not in the resulting expression
-export function oldRemoveImplies(expr: AstExpr): AstExpr {
-    switch (expr.type) {
-        case AstExprKind.Symbol:
-        case AstExprKind.Tautology:
-        case AstExprKind.Contradiction:
-            return expr;
-        case AstExprKind.Not:
-            return removeImplies(expr.child);
-        case AstExprKind.And:
-        case AstExprKind.Or:
-            return binaryExpr(expr.type, removeImplies(expr.a), removeImplies(expr.b), expr.flavor);
-        case AstExprKind.All:
-        case AstExprKind.Any:
-            return selectExpr(expr.type, ...expr.children.map((child) => removeImplies(child)));
-        case AstExprKind.Implies:
-            return byDefinitionOfImplies(
-                reducedImplies(removeImplies(expr.a), removeImplies(expr.b)),
-                expr
-            );
-    }
-
-    throw new SimplificationError("removeImplies() got unrecognized AstExprKind");
 }
