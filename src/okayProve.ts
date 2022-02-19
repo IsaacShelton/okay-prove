@@ -1,11 +1,12 @@
 
-import { areExprsIdentical, Ast, AstExpr } from './ast';
+import { areExprsIdentical, Ast, AstExpr, isExprIncluded, mergeExprLists } from './ast';
 import { breakDown } from './breakDown';
 import { canConclude } from './canConclude';
 import { deduce } from './deduce';
 import { byPremise } from './justification';
 import { initialSimplify } from './simplify';
 import { simplifyConclusion } from './simplifyConclusion';
+import { suggest } from './suggest';
 import { visualizeExpr } from './visualize';
 import { Waterfall } from './waterfall';
 
@@ -29,6 +30,21 @@ export class Structure {
 
         // Try to reach the conclusion given the facts we know
         let solution = this.conclusionReached();
+
+        // If we've run out of deductions to make and still
+        // don't have a solution, then try to generate suggestions
+        // for things to try to prove/disprove
+        if (solution === null && this.facts.length == oldFactsLength) {
+            let suggestions = suggest(this.facts, this.conclusion.getLatest());
+
+            for (let suggestion of suggestions) {
+                let stretch = canConclude(this.facts, suggestion);
+
+                if (stretch !== null && !isExprIncluded(this.facts, stretch)) {
+                    this.facts.push(stretch);
+                }
+            }
+        }
 
         if (solution) {
             return solution;
