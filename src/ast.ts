@@ -80,6 +80,41 @@ export function areExprsIdentical(a: AstExpr, b: AstExpr): boolean {
     throw new Error("areExprsEqual() cannot compare expr of unrecognized type");
 }
 
+export function areExprListsIdentical(aList: AstExpr[], bList: AstExpr[]): boolean {
+    if (aList.length != bList.length) return false;
+
+    for (let i = 0; i < aList.length; i++) {
+        if (!areExprsIdentical(aList[i], bList[i])) return false;
+    }
+
+    return true;
+}
+
+export function areExprListsIdenticalUnordered(aUnorderedList: AstExpr[], bUnorderedList: AstExpr[]): boolean {
+    if (aUnorderedList.length != bUnorderedList.length) return false;
+
+    let aList = aUnorderedList;
+    let bList = [...bUnorderedList];
+
+    for (let i = 0; i < aList.length; i++) {
+        let found = false;
+
+        for (let j = 0; j < bList.length; j++) {
+            if (areExprsIdentical(aList[i], bList[j])) {
+                found = true;
+                bList = [...bList.slice(0, j), ...bList.slice(j + 1)];
+                break;
+            }
+        }
+
+        if (!found) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 export function isExprIncluded(array: AstExpr[], isolated: AstExpr): boolean {
     return whereExprIncluded(array, isolated) !== null;
 }

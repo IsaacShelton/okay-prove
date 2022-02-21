@@ -299,7 +299,6 @@ test("proof 36", () => {
     `);
 });
 
-// failing
 test("proof 37", () => {
     expectProvable(`
         q or not (p or not p)
@@ -314,18 +313,34 @@ test("proof 38", () => {
     `);
 });
 
-/*
-test("proof", () => {
-    // stalls
+test("proof 39", () => {
     expectProvable(`
-        not q or (not q or q)
-        q
+        p or not p
     `);
 });
-*/
+
+test("proof 40", () => {
+    expectProvable(`
+        not (p and not p)
+    `);
+});
 
 /*
-test("proof", () => {
+test("proof 41", () => {
+    expectProvable(`
+        (not q and q) or p
+        p
+    `);
+});
+
+test("proof 42", () => {
+    expectProvable(`
+        (not p and p) or q
+        p or not p
+    `);
+});
+
+test("proof 43", () => {
     expectProvable(`
         q or not (p or not p)
         q
@@ -333,10 +348,10 @@ test("proof", () => {
 });
 */
 
-/*
-test("proof", () => {
-    expectProvable(`
-        p or not p
-    `);
-});
-*/
+// test("malformed proof", () => {
+//     // stalls
+//     expectProvable(`
+//         not q or (not q or q)
+//         q
+//     `);
+// });

@@ -1,5 +1,6 @@
 
 import { AstExpr, AstExprKind } from "./ast";
+import { reduceCompoundJunction } from "./canAssociative";
 
 export function isCompoundOr(expr: AstExpr): boolean {
     if (expr.type == AstExprKind.Or) {
@@ -10,10 +11,5 @@ export function isCompoundOr(expr: AstExpr): boolean {
 }
 
 export function reduceCompoundOr(expr: AstExpr): AstExpr[] {
-    switch (expr.type) {
-        case AstExprKind.Or:
-            return [...reduceCompoundOr(expr.a), ...reduceCompoundOr(expr.b)];
-        default:
-            return [expr];
-    }
+    return reduceCompoundJunction(expr, AstExprKind.Or);
 }
