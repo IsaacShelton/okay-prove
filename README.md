@@ -48,7 +48,7 @@ Symbols can be any combination of the characters `A-Z`, `a-z`, `0-9` and `_`.
 
 ##### Operators
 
-Operators include `and`, `or`, `not` and `implies`, with `not` having the highest precedence and `implies` having a higher precedence than `and` and `or`.
+Operators include `and`, `or`, `not` and `implies`, with `not` having the highest precedence and `implies` having a lower precedence than `and` and `or`.
 
 ##### Groups
 
