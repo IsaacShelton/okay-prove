@@ -1,5 +1,5 @@
 
-import { areExprListsIdenticalUnordered } from "./ast"
+import { areExprListsIdenticalUnordered } from "./areExprsIdentical"
 import { not, symbol } from "./astExprMaker";
 
 test("areExprsListsIdenticalUnordered test 1", () => {

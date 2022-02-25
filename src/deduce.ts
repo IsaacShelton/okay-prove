@@ -23,7 +23,7 @@ export function deduce(facts: AstExpr[]): AstExpr[] {
         facts.flatMap(deduceDeMorgans),
         facts.flatMap(deduceDoubleNegation),
         deduceTransitivity(facts),
-        facts.flatMap(deduceNegation),
+        facts.flatMap(deduceNegation).filter(isNotNullOrUndefined),
         facts.flatMap(deduceIdempotent).filter(isNotNullOrUndefined),
     );
 }

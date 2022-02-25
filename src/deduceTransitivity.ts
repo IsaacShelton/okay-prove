@@ -1,5 +1,6 @@
 
-import { areExprsIdentical, AstExpr, AstExprKind, mergeExprLists } from "./ast";
+import { areExprsIdentical } from "./areExprsIdentical";
+import { AstExpr, AstExprKind, mergeExprLists } from "./ast";
 import { makeDisjunction } from "./astExprMaker";
 import { byTransitivity } from "./justification";
 import { opposite } from "./opposite";

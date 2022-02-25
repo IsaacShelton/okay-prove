@@ -1,7 +1,8 @@
 
 import { AstExpr, AstExprKind } from "./ast";
-import { areExprsEquivalent } from "./canConclude";
+import { areExprsEquivalent } from "./areExprsEquivalent";
 import { byDoubleNegation } from "./justification";
+import { not } from "./astExprMaker";
 
 export function canDoubleNegate(from: AstExpr, to: AstExpr): AstExpr | null {
     return canDoubleNegateForward(from, to)
@@ -32,4 +33,18 @@ export function canDoubleNegateBackwards(from: AstExpr, to: AstExpr): AstExpr | 
     } else {
         return null;
     }
+}
+
+export function canDoubleNegateTowards(from: AstExpr, to: AstExpr): AstExpr | null {
+    if (to.type === AstExprKind.Not && to.child.type === AstExprKind.Not) {
+        let stretch = areExprsEquivalent(from, to.child.child);
+
+        if (stretch) {
+            return byDoubleNegation(not(not(stretch)), from);
+        } else {
+            return null;
+        }
+    }
+
+    return canDoubleNegateBackwards(from, to);
 }

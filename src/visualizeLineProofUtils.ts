@@ -1,5 +1,6 @@
 
-import { areExprsIdentical, AstExpr } from "./ast";
+import { areExprsIdentical } from "./areExprsIdentical";
+import { AstExpr } from "./ast";
 
 export class Line {
     constructor(public expr: AstExpr, public representation: string) { }

@@ -1,7 +1,8 @@
 
 import assert from "assert";
 import { deepCopy } from "deep-copy-ts";
-import { areExprsIdentical, AstBinaryExpr, AstExpr, AstSelectExpr } from "./ast";
+import { areExprsIdentical } from "./areExprsIdentical";
+import { AstBinaryExpr, AstExpr, AstSelectExpr } from "./ast";
 import { justifyUnsafe } from "./justification";
 
 // Does "black magic" in order to justify in-place modifications of a sub-expression that's inside a binary expression

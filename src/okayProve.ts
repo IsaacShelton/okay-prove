@@ -1,6 +1,6 @@
 
-import { areExprsIdentical, Ast, AstExpr, isExprIncluded } from './ast';
-import { contradiction, not, tautology } from './astExprMaker';
+import { areExprsIdentical } from './areExprsIdentical';
+import { Ast, AstExpr, isExprIncluded } from './ast';
 import { breakDown } from './breakDown';
 import { canConclude } from './canConclude';
 import { deduce } from './deduce';

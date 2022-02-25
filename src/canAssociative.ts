@@ -1,8 +1,10 @@
 
-import { areExprListsIdentical, areExprListsIdenticalUnordered, AstExpr, AstExprKind } from "./ast";
+import { areExprListsEquivalentUnordered } from "./areExprsEquivalent";
+import { areExprListsIdentical, areExprListsIdenticalUnordered } from "./areExprsIdentical";
+import { AstExpr, AstExprKind } from "./ast";
 import { byAssociative } from "./justification";
 
-export function canAssociative(from: AstExpr, to: AstExpr): AstExpr | null {
+export function canAssociative(from: AstExpr, to: AstExpr, takeIntoAccountEquivalence: boolean = true): AstExpr | null {
     // (a or b) or c             ->   a or (b or c)
     // (a or b) or c             ->   a or (c or b) (+commutative)
     // d or ((a or b) or c)      ->   (d or a) or (b or c)
@@ -27,9 +29,16 @@ export function canAssociative(from: AstExpr, to: AstExpr): AstExpr | null {
         return byAssociative(to, from);
     }
 
-    if (areExprListsIdenticalUnordered(fromChildren, toChildren)) {
-        // TODO: Include justification for any commutative operations
-        return byAssociative(to, from);
+    if (takeIntoAccountEquivalence) {
+        if (areExprListsEquivalentUnordered(fromChildren, toChildren)) {
+            // TODO: Include justification for any commutative operations
+            return byAssociative(to, from);
+        }
+    } else {
+        if (areExprListsIdenticalUnordered(fromChildren, toChildren)) {
+            // TODO: Include justification for any commutative operations
+            return byAssociative(to, from);
+        }
     }
 
     return null;
