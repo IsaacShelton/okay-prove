@@ -2,8 +2,33 @@
 import assert from "assert";
 import { deepCopy } from "deep-copy-ts";
 import { areExprsIdentical } from "./areExprsIdentical";
-import { AstBinaryExpr, AstExpr, AstSelectExpr } from "./ast";
+import { AstBinaryExpr, AstExpr, AstNotExpr, AstSelectExpr } from "./ast";
 import { justifyUnsafe } from "./justification";
+
+// Does "black magic" in order to justify in-place modifications of a sub-expression that's inside a not expression
+export function justifyInsideNotExpr(justifiedSubExpr: AstExpr, originalParentExpr: AstExpr, subExpr: AstExpr, owner: AstNotExpr): AstExpr {
+    let running = justifiedSubExpr;
+    let parent: AstExpr = originalParentExpr;
+
+    if (areExprsIdentical(running, subExpr)) {
+        return parent;
+    }
+
+    while (running.justification != null) {
+        parent = justifyUnsafe(parent, running.justification.reasoning, deepCopy(parent));
+
+        owner.child = running;
+
+        assert(running.justification.references.length >= 1);
+        running = running.justification.references[0];
+
+        if (areExprsIdentical(running, subExpr)) {
+            return parent;
+        }
+    }
+
+    throw new Error("justifyInsideNotExpr() could not justify");
+}
 
 // Does "black magic" in order to justify in-place modifications of a sub-expression that's inside a binary expression
 export function justifyInsideBinaryExpr(justifiedSubExpr: AstExpr, originalParentExpr: AstExpr, subExpr: AstExpr, owner: AstBinaryExpr, side: 0 | 1): AstExpr {
@@ -14,7 +39,7 @@ export function justifyInsideBinaryExpr(justifiedSubExpr: AstExpr, originalParen
         return parent;
     }
 
-    while (running.justification) {
+    while (running.justification != null) {
         parent = justifyUnsafe(parent, running.justification.reasoning, deepCopy(parent));
 
         if (side == 0) {
@@ -55,5 +80,5 @@ export function justifyInsideSelectExpr(justifiedSubExpr: AstExpr, originalParen
         }
     }
 
-    throw new Error("justifyInsideSelect() could not justify");
+    throw new Error("justifyInsideSelectExpr() could not justify");
 }

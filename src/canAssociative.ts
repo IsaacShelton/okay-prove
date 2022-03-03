@@ -1,5 +1,5 @@
 
-import { areExprListsEquivalentUnordered } from "./areExprsEquivalent";
+import { areBinaryExprsEquivalentUnordered, areExprListsEquivalentUnordered, areSelectExprsEquivalentUnordered } from "./areExprsEquivalent";
 import { areExprListsIdentical, areExprListsIdenticalUnordered } from "./areExprsIdentical";
 import { AstExpr, AstExprKind } from "./ast";
 import { byAssociative } from "./justification";
@@ -26,16 +26,16 @@ export function canAssociative(from: AstExpr, to: AstExpr, takeIntoAccountEquiva
     }
 
     if (areExprListsIdentical(fromChildren, toChildren)) {
-        return byAssociative(to, from);
+        return null;
     }
 
     if (takeIntoAccountEquivalence) {
         if (areExprListsEquivalentUnordered(fromChildren, toChildren)) {
-            // TODO: Include justification for any commutative operations
+            // TODO: Include justification for any commutative (and other) operations
             return byAssociative(to, from);
         }
     } else {
-        if (areExprListsIdenticalUnordered(fromChildren, toChildren)) {
+        if (areExprListsIdenticalUnordered(fromChildren, toChildren) != null) {
             // TODO: Include justification for any commutative operations
             return byAssociative(to, from);
         }

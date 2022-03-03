@@ -1,7 +1,6 @@
 
 import { and, not, or, symbol } from './astExprMaker';
 import { byCommutative, byDeMorgans, byDoubleNegation, byElimination, byPremise, bySpecialization } from './justification';
-import { logProof, logProofOrFail } from './log';
 import { okayProve } from './okayProve';
 import { expectProvable, parseOrFail } from './testing';
 
@@ -299,7 +298,7 @@ test("proof 36", () => {
     `);
 });
 
-test("proof 37", () => {
+test.only("proof 37", () => {
     expectProvable(`
         q or not (p or not p)
         q
@@ -313,13 +312,13 @@ test("proof 38", () => {
     `);
 });
 
-test("proof 39", () => {
+test.skip("proof 39", () => {
     expectProvable(`
         p or not p
     `);
 });
 
-test("proof 40", () => {
+test.skip("proof 40", () => {
     expectProvable(`
         not (p and not p)
     `);
@@ -349,9 +348,17 @@ test("proof 43", () => {
 */
 
 // test("malformed proof", () => {
-//     // stalls
+//     // stalls (and not provable)
 //     expectProvable(`
 //         not q or (not q or q)
+//         q
+//     `);
+// });
+
+// test("malformed proof", () => {
+//     // stalls (and not provable)
+//     expectProvable(`
+//         q or not (p or not p)
 //         q
 //     `);
 // });

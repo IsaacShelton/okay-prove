@@ -68,7 +68,7 @@ function deduceNegationForSelectExpr(
         let childDeduced = deduceNegation(expr.children[i]);
 
         if (childDeduced !== null) {
-            let newChildren = [...expr.children.slice(0, i), childDeduced, ...expr.children.slice(i)];
+            let newChildren = [...expr.children.slice(0, i), childDeduced, ...expr.children.slice(i + 1)];
             return selectExpr(expr.type, ...newChildren);
         }
     }
