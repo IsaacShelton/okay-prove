@@ -1,6 +1,6 @@
 {
   "name": "okay-prove",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Minimal package for generating propositional logic proofs",
   "license": "MIT",
   "repository": "IsaacShelton/okay-prove",
