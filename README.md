@@ -7,7 +7,7 @@ Propositional logic proof generator written in TypeScript
 
 You can interact with it using one of these front-end interfaces:
 
-- Command-Line Interface - [`okay-prove-cli`](https://www.npmjs.com/package/okay-prove-cli)
+- Command-Line Interface - [`okay-prove-cli`](https://github.com/IsaacShelton/okay-prove-cli)
 
 Or as a library in your own code:
 
@@ -43,7 +43,7 @@ Tautologies are written with a period - e.g. `.`
 
 ##### Contradictions
 
-Contradictions are written with an exclaimation point - e.g. `!`
+Contradictions are written with an exclamation point - e.g. `!`
 
 
 
