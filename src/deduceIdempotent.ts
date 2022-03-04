@@ -1,7 +1,7 @@
 
 import { AstExpr, AstExprKind, AstSelectExpr } from "./ast";
 import { makeConjunction, makeDisjunction } from "./astExprMaker";
-import { areExprsEquivalent } from "./canConclude";
+import { areExprsEquivalent } from "./areExprsEquivalent";
 import { byIdempotent } from "./justification";
 
 export function deduceIdempotent(expr: AstExpr): AstExpr[] {

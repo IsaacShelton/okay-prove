@@ -1,7 +1,7 @@
 
 import { AstExpr, AstExprKind, AstSelectExpr } from "./ast";
 import { binaryExpr, selectExpr } from "./astExprMaker";
-import { areExprsEquivalent } from "./canConclude";
+import { areExprsEquivalent } from "./areExprsEquivalent";
 import { byCommutative } from "./justification";
 
 export function canCommutative(from: AstExpr, to: AstExpr): AstExpr | null {

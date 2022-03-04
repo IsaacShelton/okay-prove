@@ -46,14 +46,7 @@ function findAndRemoveOneAssertionFromJunction(
     universalBoundsKind: AstExprKind.Tautology | AstExprKind.Contradiction
 ): AstExpr | null {
 
-    // Try to remove assertion from children first
-    let reduceA = findAndRemoveOneAssertion(expr.a);
-    if (reduceA) return binaryExpr(expr.type, reduceA, expr.b, expr.flavor);
-
-    let reduceB = findAndRemoveOneAssertion(expr.b);
-    if (reduceB) return binaryExpr(expr.type, expr.a, reduceB, expr.flavor);
-
-    // Otherwise try to remove from self
+    // First try to remove from self
     if (expr.a.type == identityKind) return byIdentity(expr.b, expr);
     if (expr.b.type == identityKind) return byIdentity(expr.a, expr);
 
@@ -63,6 +56,12 @@ function findAndRemoveOneAssertionFromJunction(
             expr
         );
     }
+    // Otherwise try to remove assertion from children first
+    let reduceA = findAndRemoveOneAssertion(expr.a);
+    if (reduceA) return binaryExpr(expr.type, reduceA, expr.b, expr.flavor);
+
+    let reduceB = findAndRemoveOneAssertion(expr.b);
+    if (reduceB) return binaryExpr(expr.type, expr.a, reduceB, expr.flavor);
 
     return null;
 }
@@ -74,16 +73,7 @@ function findAndRemoveOneAssertionFromCompoundJunction(
     selectionConstructorFunction: (children: AstExpr[]) => AstExpr,
 ): AstExpr | null {
 
-    // Try to remove assertion from children first
-    for (let i = 0; i < expr.children.length; i++) {
-        let reducedChild = findAndRemoveOneAssertion(expr.children[i]);
-
-        if (reducedChild) {
-            return selectionConstructorFunction([...expr.children.slice(0, i), ...expr.children.slice(i)]);
-        }
-    }
-
-    // Otherwise try to remove from self
+    // First try to remove from self
     let universalAssertion = assertion(universalBoundsKind);
     let identityAssertion = assertion(identityKind);
 
@@ -103,5 +93,18 @@ function findAndRemoveOneAssertionFromCompoundJunction(
         running = byIdentity(selectionConstructorFunction(remaining), running);
     }
 
-    return running !== expr ? running : null;
+    if (running !== expr) {
+        return running;
+    }
+
+    // Otherwise try to remove assertion from children first
+    for (let i = 0; i < expr.children.length; i++) {
+        let reducedChild = findAndRemoveOneAssertion(expr.children[i]);
+
+        if (reducedChild) {
+            return selectionConstructorFunction([...expr.children.slice(0, i), ...expr.children.slice(i + 1)]);
+        }
+    }
+
+    return null;
 }

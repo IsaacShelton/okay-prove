@@ -1,10 +1,11 @@
 {
   "name": "okay-prove",
   "version": "0.0.1",
+  "description": "Minimal package for generating propositional logic proofs",
+  "license": "MIT",
+  "repository": "IsaacShelton/okay-prove",
   "main": "./dist/index.js",
-  "bin": {
-    "okay-prove": "./dist/index.js"
-  },
+  "types": "dist/index.d.ts",
   "scripts": {
     "it": "npm run build && node dist/index.js",
     "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",

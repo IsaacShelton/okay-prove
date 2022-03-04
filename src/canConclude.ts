@@ -1,8 +1,7 @@
-import { areExprsIdentical, AstExpr, AstExprKind } from "./ast";
-import { and, assertion, contradiction, not, tautology } from "./astExprMaker";
-import { canCommutative } from "./canCommutative";
-import { canDeMorgans } from "./canDeMorgans";
-import { canDoubleNegate } from "./canDoubleNegate";
+
+import { areExprsEquivalent } from "./areExprsEquivalent";
+import { AstExpr, AstExprKind } from "./ast";
+import { and, contradiction, not, tautology } from "./astExprMaker";
 import { byConjunction, byConjunctions, byGeneralization, byPremise, bySpecialization } from "./justification";
 import { opposite } from "./opposite";
 
@@ -32,25 +31,6 @@ export function canConclude(facts: AstExpr[], conclusion: AstExpr): AstExpr | nu
 
     // Otherwise, we are unable to reach to conclusion
     return null;
-}
-
-export function areExprsEquivalent(from: AstExpr, to: AstExpr, maxRecursion: number = 3): AstExpr | null {
-    if (areExprsIdentical(from, to)) return from;
-
-    // Don't do further testing if too deep
-    if (maxRecursion <= 0) return null;
-
-    function trial(trial: AstExpr | null, to: AstExpr, maxRecursion: number) {
-        if (trial !== null && areExprsEquivalent(trial, to, maxRecursion - 1)) {
-            return trial;
-        } else {
-            return null;
-        }
-    }
-
-    return trial(canCommutative(from, to), to, maxRecursion)
-        ?? trial(canDeMorgans(from), to, maxRecursion)
-        ?? trial(canDoubleNegate(from, to), to, maxRecursion);
 }
 
 function canConstruct(facts: AstExpr[], conclusion: AstExpr): AstExpr | null {

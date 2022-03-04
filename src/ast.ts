@@ -1,4 +1,5 @@
 
+import { areExprsIdentical } from './areExprsIdentical';
 import { Justification } from './justification';
 
 export enum AstExprKind {
@@ -38,46 +39,6 @@ export type AstExpr =
 
 export class Ast {
     constructor(public premises: AstExpr[], public conclusion: AstExpr) { }
-}
-
-// NOTE: Does not consider justifications or flavors when determining
-// whether two expressions are identical
-export function areExprsIdentical(a: AstExpr, b: AstExpr): boolean {
-    if (a.type !== b.type) return false;
-
-    switch (a.type) {
-        case AstExprKind.Symbol:
-            return a.name == (b as AstSymbolExpr).name;
-        case AstExprKind.Not:
-            return areExprsIdentical(a.child, (b as AstNotExpr).child);
-        case AstExprKind.And:
-        case AstExprKind.Or:
-        case AstExprKind.Implies:
-            return areExprsIdentical(a.a, (b as AstBinaryExpr).a)
-                && areExprsIdentical(a.b, (b as AstBinaryExpr).b);
-        case AstExprKind.Any:
-        case AstExprKind.All: {
-            let aSelect = a;
-            let bSelect = b as AstSelectExpr;
-
-            if (aSelect.children.length != bSelect.children.length) {
-                return false;
-            }
-
-            for (let i = 0; i < aSelect.children.length; i++) {
-                if (!areExprsIdentical(aSelect.children[i], bSelect.children[i])) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-        case AstExprKind.Contradiction:
-        case AstExprKind.Tautology:
-            return true;
-    }
-
-    throw new Error("areExprsEqual() cannot compare expr of unrecognized type");
 }
 
 export function isExprIncluded(array: AstExpr[], isolated: AstExpr): boolean {

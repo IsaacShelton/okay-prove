@@ -1,16 +1,9 @@
-#!/usr/bin/env node
 
-import { Command, Option } from 'commander';
-import { main } from './main';
-
-let program = new Command();
-
-program
-    .name('okay-prove')
-    .version('0.0.1')
-    .description('A CLI tool for automatically generating logical proofs')
-    .argument('<filename>', 'file with premises and conclusion')
-    .option('-t, --trace', 'output known facts if unable to prove')
-    .addOption(new Option('-f, --format <value>', "display format of proof").choices(['cascade', 'inline', 'latex', 'collapse']).default('inline'))
-    .action(main)
-    .parse(process.argv);
+export { okayProve } from './okayProve';
+export { AstExpr, AstExprKind, Flavor, AstSymbolExpr, AstBinaryExpr, AstNotExpr, AstSelectExpr, AstAssertExpr, Ast } from './ast';
+export { Justification } from './justification';
+export { ParseError, Parser, parse } from './parse';
+export { TokenKind, Token, LexError, lex } from './lex';
+export { visualizeExpr, visualizeExprLatex, visualizeProof, visualizeReasoning } from './visualize';
+export * from './astExprMaker';
+export { Reasoning } from './reasoning';

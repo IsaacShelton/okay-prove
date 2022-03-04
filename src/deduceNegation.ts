@@ -1,7 +1,7 @@
 
 import { AstBinaryExpr, AstExpr, AstExprKind, AstSelectExpr } from "./ast";
-import { assertion, binaryExpr, contradiction, selectExpr, tautology } from "./astExprMaker";
-import { areExprsEquivalent } from "./canConclude";
+import { assertion, binaryExpr, contradiction, not, selectExpr, tautology } from "./astExprMaker";
+import { areExprsEquivalent } from "./areExprsEquivalent";
 import { byNegation } from "./justification";
 import { justifyInsideBinaryExpr, justifyInsideSelectExpr } from "./justifyInside";
 import { opposite } from "./opposite";
@@ -28,18 +28,18 @@ function deduceNegationForBinaryExpr(expr: AstBinaryExpr): AstExpr | null {
 
     // Try to deduce negation for children first
 
-    let aDeduction = deduceNegation(expr.a);
-    if (aDeduction !== null) {
-        return byNegation(
-            binaryExpr(expr.type, aDeduction, expr.b, expr.flavor),
-            expr
-        );
-    }
-
     let bDeduction = deduceNegation(expr.b);
     if (bDeduction !== null) {
         return byNegation(
             binaryExpr(expr.type, expr.a, bDeduction, expr.flavor),
+            expr
+        );
+    }
+
+    let aDeduction = deduceNegation(expr.a);
+    if (aDeduction !== null) {
+        return byNegation(
+            binaryExpr(expr.type, aDeduction, expr.b, expr.flavor),
             expr
         );
     }
@@ -64,17 +64,17 @@ function deduceNegationForSelectExpr(
     // (a and b and c and d and not a)   ->   !
 
     // Try to deduce negation for children first
-    for (let i = 0; i < expr.children.length; i++) {
+    for (let i = expr.children.length - 1; i >= 0; i--) {
         let childDeduced = deduceNegation(expr.children[i]);
 
         if (childDeduced !== null) {
-            let newChildren = [...expr.children.slice(0, i), childDeduced, ...expr.children.slice(i)];
+            let newChildren = [...expr.children.slice(0, i), childDeduced, ...expr.children.slice(i + 1)];
             return selectExpr(expr.type, ...newChildren);
         }
     }
 
     // Otherwise try to deduce negation for ourself
-    for (let i = 0; i < expr.children.length; i++) {
+    for (let i = expr.children.length - 1; i >= 0; i--) {
         for (let j = 0; j < i; j++) {
             let stretch = areExprsEquivalent(expr.children[i], opposite(expr.children[j]));
 

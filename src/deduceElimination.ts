@@ -1,5 +1,6 @@
 
-import { areExprsIdentical, AstBinaryExpr, AstExpr, AstExprKind, AstSelectExpr } from "./ast";
+import { areExprsIdentical } from "./areExprsIdentical";
+import { AstBinaryExpr, AstExpr, AstExprKind, AstSelectExpr } from "./ast";
 import { any, or } from "./astExprMaker";
 import { byAssociative, byElimination } from "./justification";
 import { opposite } from "./opposite";

@@ -22,8 +22,8 @@ export function deduce(facts: AstExpr[]): AstExpr[] {
         facts.flatMap(deduceDistribution),
         facts.flatMap(deduceDeMorgans),
         facts.flatMap(deduceDoubleNegation),
-        facts.flatMap(deduceIdempotent),
-        facts.map(deduceNegation).filter(isNotNullOrUndefined),
         deduceTransitivity(facts),
+        facts.flatMap(deduceNegation).filter(isNotNullOrUndefined),
+        facts.flatMap(deduceIdempotent).filter(isNotNullOrUndefined),
     );
 }

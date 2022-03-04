@@ -2,7 +2,7 @@
 import { deepCopy } from "deep-copy-ts";
 import { AstBinaryExpr, AstExpr, AstExprKind, Flavor } from "./ast";
 import { binaryExpr } from "./astExprMaker";
-import { areExprsEquivalent } from "./canConclude";
+import { areExprsEquivalent } from "./areExprsEquivalent";
 import { byDistributive, justifyUnsafe } from "./justification";
 import { justifyInsideBinaryExpr } from "./justifyInside";
 import { Reasoning } from "./reasoning";

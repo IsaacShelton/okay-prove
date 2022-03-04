@@ -1,6 +1,7 @@
 
-import { areExprsIdentical, AstExpr, AstExprKind, Flavor } from './ast';
-import { and, contradiction, not, tautology } from './astExprMaker';
+import { areExprsIdentical } from './areExprsIdentical';
+import { AstExpr, AstExprKind, Flavor } from './ast';
+import { and } from './astExprMaker';
 import { Reasoning } from './reasoning';
 
 export class Justification {
