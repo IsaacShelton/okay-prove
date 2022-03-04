@@ -3,36 +3,19 @@ Propositional logic proof generator written in TypeScript
 
 
 
-### CLI Usage
+### Usage
 
-```
-okay-prove <file> <options>
-```
+You can interact with it using one of these front-end interfaces:
 
+- Command-Line Interface - [`okay-prove-cli`](https://www.npmjs.com/package/okay-prove-cli)
 
+Or as a library in your own code:
 
-#### Options
-
-```
--h, -help              help
--V, --version          version
--t, --trace            show known facts if unable to prove
--f, --format <choice>  format for proof - cascade, inline, latex, or collapse
-```
+- [`okay-prove`](https://www.npmjs.com/package/okay-prove) on npm
 
 
 
-#### Example
-
-````
-okay-prove proof18.logic -f latex
-````
-
-
-
-### Prompt Format
-
-question1.logic
+### High-Level Prompt Format
 
 ```
 a
@@ -68,14 +51,14 @@ Contradictions are written with an exclaimation point - e.g. `!`
 
 #### Example #1
 
-Prompt:
+Prompt (in high-level input format):
 
 ```
 (q and (a or b)) or ((b or a) and r)
 b or a
 ```
 
-Proof:
+Proof (visualized in "inline" format):
 
 ```
  1. (q and (a or b)) or ((b or a) and r) [premise]
@@ -90,7 +73,7 @@ Proof:
 
 #### Example #2
 
-Prompt:
+Prompt (in high-level input format):
 
 ```
 p or not (r or q)
@@ -99,7 +82,7 @@ not p
 not s
 ```
 
-Proof:
+Proof (visualized in "inline" format):
 
 ```
  1. not p             [premise]
@@ -115,7 +98,7 @@ Proof:
 
 #### Example #3
 
-Prompt:
+Prompt (in high-level input format):
 
 ```
 p implies (q implies r)
@@ -126,7 +109,7 @@ s
 not x
 ```
 
-Proof:
+Proof (visualized in "inline" format):
 
 ```
  1. s                               [premise]
