@@ -1,5 +1,5 @@
 
-import { assert } from 'console';
+import assert from 'assert';
 import { AstBinaryExpr, AstExpr, AstExprKind } from './ast';
 import { any, not, or } from './astExprMaker';
 import { isCompoundOr, reduceCompoundOr } from './compoundOr';
